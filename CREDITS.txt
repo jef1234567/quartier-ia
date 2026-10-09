@@ -1,0 +1,2 @@
+Modèles 3D : KayKit City Builder Bits, Furniture Bits et Prototype Bits, par Kay Lousberg (www.kaylousberg.com), licence CC0.
+Moteur 3D : three.js (licence MIT).

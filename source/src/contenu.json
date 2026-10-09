@@ -1,0 +1,127 @@
+{
+  "titre": "Quartier IA",
+  "sous_titre": "EdG-T · prototype",
+  "lieux": [
+    {
+      "id": "accueil",
+      "nom": "Accueil",
+      "resume": "Le poste de garde : à quoi sert le quartier et comment y contribuer.",
+      "entrees": [
+        {
+          "type": "texte",
+          "titre": "À quoi sert ce quartier",
+          "resume": "Un seul endroit pour retrouver ce que le comité IA produit et utilise.",
+          "contenu": "Chaque lieu ouvre une liste : skills et prompts à la bibliothèque, cours en salle de classe, batailles sur le terrain, outils en salle tactique, projets en cours à l'atelier.\n\nUne entrée est soit un texte lu sur place, soit un lien, soit un outil qui s'ouvre dans un nouvel onglet.\n\nLe dépôt est public : aucun contenu sensible ou à diffusion restreinte ne doit y figurer. Ce prototype n'est pas un site officiel."
+        },
+        {
+          "type": "texte",
+          "titre": "Ajouter une entrée",
+          "resume": "Tout le contenu tient dans un seul fichier, contenu.json.",
+          "contenu": "1. Ouvre contenu.json dans le dépôt GitHub et passe en édition.\n2. Repère le lieu voulu, copie une entrée existante et colle-la à la suite.\n3. Change le titre, le résumé et le type : texte, lien ou outil.\n4. Pour un texte, remplis contenu ; ajoute copiable: true pour un prompt.\n5. Pour un lien ou un outil, remplis url.\n6. Valide la modification : la page publiée se met à jour au bout de quelques minutes.\n\nUne virgule oubliée suffit à casser le fichier. En cas de doute, fais relire la modification avant de valider."
+        },
+        {
+          "type": "texte",
+          "titre": "Crédits",
+          "resume": "Ce qui vient d'ailleurs.",
+          "contenu": "Modèles 3D des véhicules, immeubles et meubles : KayKit, par Kay Lousberg (www.kaylousberg.com), licence CC0.\nMoteur 3D : three.js, licence MIT.\nPersonnages, bâtiments du quartier et animations : faits pour ce projet."
+        }
+      ]
+    },
+    {
+      "id": "bibliotheque",
+      "nom": "Bibliothèque",
+      "resume": "Les skills et les prompts partagés par le groupe.",
+      "entrees": [
+        {
+          "type": "texte",
+          "exemple": true,
+          "copiable": true,
+          "titre": "Prompt · Synthèse d'un document long",
+          "resume": "Une page maximum, sans rien ajouter au document.",
+          "contenu": "Tu es officier rédacteur. À partir du document que je te fournis, rédige une synthèse d'une page maximum.\n\nStructure :\n1. L'idée maîtresse en deux phrases.\n2. Trois à cinq points clés, chacun appuyé sur un fait ou un chiffre du document.\n3. Ce que le document laisse en suspens.\n\nRègles : phrases complètes, pas de jargon inutile, aucune information absente du document. Si un point est incertain, signale-le au lieu de l'inventer."
+        },
+        {
+          "type": "texte",
+          "exemple": true,
+          "copiable": true,
+          "titre": "Prompt · Relecture critique d'une note",
+          "resume": "La note relue par un chef pressé qui doit décider.",
+          "contenu": "Relis la note ci-dessous comme le ferait un chef pressé qui doit décider.\n\nDonne-moi, dans l'ordre :\n1. Ce que tu comprends de la demande, en une phrase.\n2. Les trois faiblesses les plus gênantes, le fond d'abord, la forme ensuite.\n3. Les questions que le lecteur se posera et auxquelles la note ne répond pas.\n4. Une reformulation du paragraphe le plus faible.\n\nNe réécris pas toute la note. Ne me flatte pas."
+        },
+        {
+          "type": "texte",
+          "exemple": true,
+          "titre": "Skill · Fiche synthèse de conférence",
+          "resume": "Des notes brutes à une fiche d'une page A4 paysage sur deux colonnes.",
+          "contenu": "Emplacement réservé. Le fichier du skill sera lié ici une fois le dépôt de partage choisi."
+        },
+        {
+          "type": "texte",
+          "exemple": true,
+          "titre": "Skill · Mise en forme d'un compte rendu",
+          "resume": "Applique une charte de mise en forme à un document Word.",
+          "contenu": "Emplacement réservé. Le fichier du skill sera lié ici une fois le dépôt de partage choisi."
+        }
+      ]
+    },
+    {
+      "id": "classe",
+      "nom": "Salle de classe",
+      "resume": "Les cours et les ressources pour se former.",
+      "entrees": [
+        {
+          "type": "texte",
+          "titre": "Autoformation IA en 10 étapes",
+          "resume": "Dix fiches à faire l'une après l'autre.",
+          "contenu": "En préparation. Le lien vers le parcours sera ajouté ici."
+        }
+      ]
+    },
+    {
+      "id": "bataille",
+      "nom": "Champ de bataille",
+      "resume": "Les batailles étudiées sur le terrain.",
+      "entrees": [
+        {
+          "type": "lien",
+          "titre": "EHT Bouillon – Vue terrain",
+          "resume": "Réalité augmentée sur la campagne de mai 1940, de la frontière à la Meuse.",
+          "url": "https://jef1234567.github.io/sedan40-terrain/"
+        },
+        {
+          "type": "texte",
+          "titre": "Garigliano 1944",
+          "resume": "De la rupture jusqu'à Pico.",
+          "contenu": "En préparation."
+        }
+      ]
+    },
+    {
+      "id": "tactique",
+      "nom": "Salle tactique",
+      "resume": "Les outils à lancer directement.",
+      "entrees": [
+        {
+          "type": "outil",
+          "exemple": true,
+          "titre": "Groupe date-heure",
+          "resume": "Convertit une date et une heure en groupe date-heure au format OTAN, en heure locale et en Zulu.",
+          "url": "outils/gdh.html"
+        }
+      ]
+    },
+    {
+      "id": "atelier",
+      "nom": "Atelier",
+      "resume": "Les projets en cours du comité.",
+      "entrees": [
+        {
+          "type": "texte",
+          "titre": "Déposer un projet",
+          "resume": "Un projet en cours se décrit en trois lignes.",
+          "contenu": "Pour chaque projet : son nom, son pilote, son état d'avancement et ce dont il a besoin.\n\nAucun projet n'est encore déposé."
+        }
+      ]
+    }
+  ]
+}

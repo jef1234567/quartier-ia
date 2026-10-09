@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Groupe date-heure</title>
+<style>
+:root{--bg:#E4EAEE;--surface:#FBFCFD;--ink:#17213B;--muted:#586480;--line:#C9D2DB;--accent:#B3202C;--on-accent:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1422;--surface:#182035;--ink:#E9EDF5;--muted:#9BA7C0;--line:#2C3754;--accent:#E25560;--on-accent:#1A0508;color-scheme:dark}}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif}
+main{max-width:34rem;margin:0 auto;padding:32px 16px;display:flex;flex-direction:column;gap:20px}
+h1{font:400 1.7rem/1.15 Georgia,serif;margin:0}
+p{margin:0;color:var(--muted)}
+label{display:flex;flex-direction:column;gap:6px;font-weight:600}
+input{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--ink);max-width:100%}
+dl{margin:0;display:grid;gap:12px}
+dl div{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+dt{color:var(--muted);font-size:.85rem}
+dd{margin:0;font:600 1.25rem/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.04em;user-select:all}
+button{font:inherit;padding:6px 12px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:var(--on-accent);cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Groupe date-heure</h1>
+  <p>Format OTAN : jour, heure, minute, lettre de fuseau, mois, année. Outil d'exemple du Quartier IA.</p>
+  <label for="quand">Date et heure locales
+    <input id="quand" type="datetime-local">
+  </label>
+  <dl>
+    <div><dt>Heure locale</dt><dd id="local">—</dd><button type="button" data-cible="local">Copier</button></div>
+    <div><dt>Zulu</dt><dd id="zulu">—</dd><button type="button" data-cible="zulu">Copier</button></div>
+  </dl>
+</main>
+<script>
+const MOIS=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const p=n=>String(n).padStart(2,'0');
+// Lettre de fuseau : Z pour UTC, A à M (sans J) à l'est, N à Y à l'ouest.
+function lettre(h){ if(!Number.isInteger(h)||Math.abs(h)>12) return null; return h===0?'Z':h>0?'ABCDEFGHIKLM'[h-1]:'NOPQRSTUVWXY'[-h-1]; }
+function gdh(j,h,m,l,mo,a){ return p(j)+p(h)+p(m)+l+' '+MOIS[mo]+' '+p(a%100); }
+function maj(){
+  const v=document.getElementById('quand').value, d=v?new Date(v):null;
+  const ok=d&&!isNaN(d);
+  const l=ok?lettre(-d.getTimezoneOffset()/60):null;
+  document.getElementById('local').textContent=ok&&l?gdh(d.getDate(),d.getHours(),d.getMinutes(),l,d.getMonth(),d.getFullYear()):'—';
+  document.getElementById('zulu').textContent=ok?gdh(d.getUTCDate(),d.getUTCHours(),d.getUTCMinutes(),'Z',d.getUTCMonth(),d.getUTCFullYear()):'—';
+}
+const n=new Date();
+document.getElementById('quand').value=n.getFullYear()+'-'+p(n.getMonth()+1)+'-'+p(n.getDate())+'T'+p(n.getHours())+':'+p(n.getMinutes());
+document.getElementById('quand').addEventListener('input',maj);
+document.querySelectorAll('button[data-cible]').forEach(b=>b.addEventListener('click',()=>{
+  const t=document.getElementById(b.dataset.cible).textContent;
+  navigator.clipboard.writeText(t).then(()=>{b.textContent='Copié';setTimeout(()=>b.textContent='Copier',1500);}).catch(()=>{b.textContent='Sélectionne le texte';});
+}));
+maj();
+</script>
+</body>
+</html>
