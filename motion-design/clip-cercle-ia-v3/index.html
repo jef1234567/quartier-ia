@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Clip Cercle IA EdG-T v3</title>
+    <script src="vendor/gsap.min.js"></script>
+    <script src="vendor/three.min.js"></script>
+    <script src="vendor/three-bloom.js"></script>
+    <script src="assets/modeles-kaykit.js"></script>
+    <style>
+      @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 600; src: url("assets/fonts/IBMPlexSansCondensed-SemiBold.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("assets/fonts/IBMPlexSansCondensed-Bold.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 400; src: url("assets/fonts/IBMPlexMono-Regular.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("assets/fonts/IBMPlexMono-Medium.woff2") format("woff2"); }
+
+      /* Palette du kit Cercle IA EdG-T : source unique, lue aussi par la scène 3D. */
+      :root {
+        --nuit: #0b1222; --sol: #0d1526; --socle: #1b2640; --talus: #18213a; --surface: #161e2e;
+        --trait: #2a3550; --encre: #e6ebf4; --attenue: #9aa6bd; --blanc: #f4f6fa;
+        --bleu: #9db8ec; --bleu-fort: #1d3f8f; --rouge: #ff6b5e; --rouge-fort: #c1272d;
+        --marine: #14213a; --pierre: #e3e6ec; --pierre-2: #c6cdda; --toit: #3b4868;
+        --vitre: #26314d; --traverse: #4a4236; --rail: #8a93a6; --roue: #1a2238; --phare: #fff1c2;
+        --lampe: #ffcf8a; --ciel-haut: #050914; --ciel-bas: #1b2a52; --brume: #121c38;
+        --lo-0: #a3acba; --lo-1: #5b9bff; --lo-2: #3cc2ad; --lo-3: #f0a838; --lo-4: #ef6f92; --lo-5: #a98cf0;
+        /* plan 1 : le quotidien, volontairement terne */
+        --terne: #838995; --papier: #d8dade; --papier-2: #c3c6cd; --encre-sombre: #262c3a; --grille: #8d93a0; --tampon: #9b4b48;
+        --titre: "IBM Plex Sans Condensed", "Arial Narrow", Arial, sans-serif;
+        --mono: "IBM Plex Mono", Consolas, monospace;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body { margin: 0; background: var(--nuit); color: var(--encre); font-family: var(--titre); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--nuit); }
+      .clip { position: absolute; inset: 0; }
+      p, h2 { margin: 0; }
+      #scene { display: block; width: 100%; height: 100%; }
+
+      /* ===== Plan 1 : le quotidien archaïque ===== */
+      #fond1 { background: radial-gradient(ellipse at 40% 45%, #8d939f 0%, var(--terne) 55%, #5d626d 100%); }
+      #tab { position: absolute; left: 130px; top: 168px; width: 1090px; height: 744px; background: var(--papier); border-radius: 6px; transform: rotate(-1.1deg);
+        box-shadow: 0 26px 60px rgba(20, 24, 34, 0.38), 0 2px 0 rgba(255, 255, 255, 0.35) inset; padding: 34px 38px; }
+      #tab .titre-tab { font: 500 24px/1 var(--mono); letter-spacing: 0.12em; color: #5b6272; text-transform: uppercase; margin-bottom: 20px; display: flex; justify-content: space-between; }
+      table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+      th { font: 500 22px/1 var(--mono); text-align: left; color: #f1f2f5; background: #5b6272; padding: 17px 16px; border: 2px solid var(--grille); letter-spacing: 0.04em; }
+      td { height: 172px; border: 2px solid var(--grille); padding: 0; position: relative; vertical-align: middle; }
+      td .txt { display: block; padding: 0 16px; font: 500 38px/1.1 var(--mono); color: var(--encre-sombre); opacity: 0; white-space: nowrap; }
+      td .car { position: absolute; left: 14px; top: 50%; width: 3px; height: 54px; margin-top: -27px; background: var(--encre-sombre); opacity: 0; }
+      .pile { position: absolute; left: 1310px; top: 150px; width: 520px; }
+      .pl { display: block; font: 700 92px/1.06 var(--titre); color: var(--encre-sombre); letter-spacing: -0.005em; opacity: 0; text-transform: uppercase; }
+      .stamp { position: absolute; font: 700 84px/1 var(--titre); letter-spacing: 0.05em; color: var(--tampon); border: 8px solid var(--tampon); border-radius: 10px; padding: 8px 24px 6px; opacity: 0; mix-blend-mode: multiply; }
+      #agenda { position: absolute; left: 1330px; top: 640px; width: 420px; height: 270px; background: var(--papier); border-radius: 8px; box-shadow: 0 22px 50px rgba(20, 24, 34, 0.38); opacity: 0; overflow: hidden; transform: rotate(1.4deg); }
+      #agenda .tete { height: 74px; background: var(--tampon); color: #f2e9e8; font: 500 26px/74px var(--mono); letter-spacing: 0.16em; text-align: center; }
+      #agenda .jour { position: absolute; left: 0; right: 0; top: 92px; text-align: center; font: 700 120px/1.1 var(--titre); color: var(--encre-sombre); opacity: 0; text-transform: uppercase; }
+
+      /* ===== Plan 2 : le choc ===== */
+      #fond2 { background: #05070d; }
+      .ia-g { position: absolute; left: 0; right: 0; top: 50%; margin-top: -330px; text-align: center; font: 700 660px/1 var(--titre); letter-spacing: -0.03em; opacity: 0; }
+      .ia-g span { position: absolute; left: 0; right: 0; top: 0; }
+      #ia-r { color: #ff3b4e; mix-blend-mode: screen; } #ia-c { color: #25d9ff; mix-blend-mode: screen; } #ia-b { color: #fff; }
+      #vite { position: absolute; left: 110px; bottom: 120px; font: 700 150px/1 var(--titre); color: var(--blanc); opacity: 0; text-transform: uppercase; }
+      #vite em { font-style: normal; color: var(--rouge); }
+      .quest { position: absolute; left: 0; right: 0; top: 50%; margin-top: -230px; text-align: center; opacity: 0; }
+      .quest p { font: 700 214px/1.0 var(--titre); color: var(--blanc); letter-spacing: -0.01em; white-space: nowrap; }
+      .quest p b { color: var(--rouge); font-weight: 700; }
+      .quest.echo { color: var(--blanc); }
+      .quest.echo p { color: transparent; -webkit-text-stroke: 3px rgba(244, 246, 250, 0.55); }
+      .quest.echo p b { color: transparent; -webkit-text-stroke: 3px rgba(255, 107, 94, 0.6); }
+
+      /* la feuille qui se déchire */
+      .feuille { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(141, 147, 160, 0.35) 0 2px, transparent 2px 60px), repeating-linear-gradient(90deg, rgba(141, 147, 160, 0.35) 0 2px, transparent 2px 60px), var(--papier); display: flex; align-items: center; justify-content: center; opacity: 0; will-change: transform; }
+      .feuille .pt { font: 700 920px/1 var(--titre); color: var(--encre-sombre); margin-top: -40px; }
+
+      /* ===== Plans 3D : textes ===== */
+      .texte { display: flex; align-items: flex-start; }
+      .texte.droite { justify-content: flex-end; padding: 108px 84px 0 0; background: linear-gradient(250deg, rgba(7, 11, 22, 0.72), rgba(7, 11, 22, 0) 46%); }
+      .texte.gauche { justify-content: flex-start; padding: 116px 0 0 96px; background: linear-gradient(110deg, rgba(7, 11, 22, 0.74), rgba(7, 11, 22, 0) 48%); }
+      .phrase { width: 860px; display: flex; flex-direction: column; align-items: flex-start; }
+      .repere { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; }
+      .num { display: block; font: 500 24px/1 var(--mono); letter-spacing: 0.14em; color: var(--bleu); }
+      .filet { display: block; width: 132px; height: 3px; background: var(--bleu); }
+      .ligne { display: block; font-weight: 700; color: var(--blanc); white-space: nowrap; text-shadow: 0 4px 30px rgba(5, 9, 18, 0.9); }
+      .ligne em { font-style: normal; }
+      .m { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.1em 0.04em 0.18em; margin: -0.1em -0.04em -0.18em; }
+      .mi { display: inline-block; }
+      .souligne { display: block; width: 100%; height: 8px; margin-top: 14px; background: var(--rouge); border-radius: 4px; }
+      .accent { color: var(--rouge); }
+
+      .lockup { display: flex; align-items: center; gap: 30px; margin-bottom: 40px; }
+      .insigne { flex: none; width: 168px; padding: 14px; background: #fff; border-radius: 30px; box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45); }
+      .insigne img { display: block; width: 100%; height: auto; }
+      .surtitre { display: block; font: 500 27px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--bleu); margin-bottom: 14px; }
+      .org-masque { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+      .org { display: block; font-size: 56px; font-weight: 700; line-height: 1.04; color: var(--blanc); white-space: nowrap; }
+      .mots .ligne { font-size: 120px; line-height: 1.12; margin-bottom: 8px; letter-spacing: -0.008em; display: flex; align-items: center; gap: 28px; }
+      .mots .ligne i { display: block; width: 28px; height: 28px; border-radius: 50%; flex: none; }
+
+      /* ===== Plan 4 : les cartes qui se remplissent ===== */
+      #cartes { perspective: 2200px; }
+      .cc { position: absolute; width: 560px; padding: 26px 30px 30px; background: rgba(22, 30, 46, 0.92); border: 1px solid var(--trait); border-radius: 30px; box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(157, 184, 236, 0.16); opacity: 0; }
+      .cc .et { font: 500 21px/1 var(--mono); letter-spacing: 0.14em; color: var(--bleu); text-transform: uppercase; margin-bottom: 20px; display: flex; justify-content: space-between; }
+      .cc .ok { color: var(--lo-2); opacity: 0; }
+      .mini { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+      .mini i { display: block; height: 52px; border-radius: 8px; background: #263250; }
+      .barres b { display: block; height: 18px; border-radius: 9px; background: #263250; margin-bottom: 16px; position: relative; overflow: hidden; }
+      .barres b u { position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(0); border-radius: 9px; }
+      .gantt b { margin-left: 0; }
+
+      /* ===== Plan 5 : la carte finale ===== */
+      #calque-carte { display: flex; justify-content: flex-end; align-items: center; padding: 0 84px 10px 0; }
+      .carte { width: 900px; padding: 52px 56px 54px; display: flex; flex-direction: column; gap: 28px;
+        background: rgba(22, 30, 46, 0.94); border: 1px solid var(--trait); border-radius: 40px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(157, 184, 236, 0.18); }
+      .entete { display: flex; align-items: center; gap: 34px; }
+      .tricolore { display: grid; grid-template-columns: 1fr 1fr 1fr; height: 10px; border-radius: 5px; overflow: hidden; }
+      .tricolore i { display: block; width: 100%; height: 100%; }
+      .tricolore i:nth-child(1) { background: var(--bleu-fort); } .tricolore i:nth-child(2) { background: var(--blanc); } .tricolore i:nth-child(3) { background: var(--rouge-fort); }
+      .appel .ligne { font-size: 96px; line-height: 1.03; letter-spacing: -0.01em; text-shadow: none; }
+      .rejoins { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 26px 40px 28px; border-radius: 26px; background: var(--rouge-fort); color: var(--blanc); font-size: 88px; font-weight: 700; line-height: 1; letter-spacing: -0.005em; opacity: 0; }
+      .rejoins svg { flex: none; width: 84px; height: 84px; }
+
+      #texte5 .ligne { font-size: 150px; line-height: 1.0; letter-spacing: -0.012em; }
+
+      /* Mentions de la charte */
+      #np { position: absolute; top: 30px; left: 0; right: 0; text-align: center; font: 400 20px/1 var(--mono); letter-spacing: 0.14em; color: var(--encre-sombre); }
+      #ia { position: absolute; left: 48px; bottom: 30px; font: 400 18px/1 var(--mono); color: var(--encre-sombre); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="clip-cercle-ia-v3" data-start="0" data-width="1920" data-height="1080" data-duration="45">
+
+      <section id="calque-scene" class="clip" data-start="16.8" data-duration="28.2" data-track-index="0">
+        <canvas id="scene" width="1920" height="1080"></canvas>
+      </section>
+
+      <!-- Plan 1 : le quotidien -->
+      <section id="fond1" class="clip" data-start="0" data-duration="9" data-track-index="1">
+        <div id="tab"><div class="titre-tab"><span>Suivi des dossiers</span><span>version 14</span></div>
+          <table><thead><tr><th>Date</th><th>Dossier</th><th>Service</th><th>Total</th><th>Visa</th><th>Obs.</th></tr></thead><tbody>
+<tr><td><span class="txt" id="t0">12/03</span><span class="car" id="k0"></span></td><td><span class="txt" id="t1">n°4471</span><span class="car" id="k1"></span></td><td><span class="txt" id="t2">S3</span><span class="car" id="k2"></span></td><td><span class="txt" id="t3">1 240</span><span class="car" id="k3"></span></td><td><span class="txt" id="t4">OK</span><span class="car" id="k4"></span></td><td><span class="txt" id="t5">revoir</span><span class="car" id="k5"></span></td></tr>
+<tr><td><span class="txt" id="t6">14/03</span><span class="car" id="k6"></span></td><td><span class="txt" id="t7">n°4472</span><span class="car" id="k7"></span></td><td><span class="txt" id="t8">S1</span><span class="car" id="k8"></span></td><td><span class="txt" id="t9">860</span><span class="car" id="k9"></span></td><td><span class="txt" id="t10">—</span><span class="car" id="k10"></span></td><td><span class="txt" id="t11">à vérifier</span><span class="car" id="k11"></span></td></tr>
+<tr><td><span class="txt" id="t12">14/03</span><span class="car" id="k12"></span></td><td><span class="txt" id="t13">n°4475</span><span class="car" id="k13"></span></td><td><span class="txt" id="t14">S3</span><span class="car" id="k14"></span></td><td><span class="txt" id="t15">2 310</span><span class="car" id="k15"></span></td><td><span class="txt" id="t16">OK</span><span class="car" id="k16"></span></td><td><span class="txt" id="t17">doublon ?</span><span class="car" id="k17"></span></td></tr>
+</tbody></table></div>
+        <div class="pile"><span class="pl" id="pl0">Copier.</span><span class="pl" id="pl1">Coller.</span><span class="pl" id="pl2">Recopier.</span><span class="pl" id="pl3">Ressaisir.</span><span class="pl" id="pl4">Copier.</span><span class="pl" id="pl5">Coller.</span><span class="pl" id="pl6">Recopier.</span><span class="pl" id="pl7">Ressaisir.</span></div>
+        <div class="stamp" id="s0" style="left:150px;top:300px;transform:rotate(-8deg)">À REFAIRE</div><div class="stamp" id="s1" style="left:520px;top:520px;transform:rotate(6deg)">À REFAIRE</div><div class="stamp" id="s2" style="left:260px;top:700px;transform:rotate(-4deg)">À REFAIRE</div><div class="stamp" id="s3" style="left:700px;top:360px;transform:rotate(9deg)">À REFAIRE</div>
+        <div id="agenda"><div class="tete">SEMAINE</div><span class="jour" id="j0">Lun</span><span class="jour" id="j1">Mar</span><span class="jour" id="j2">Mer</span><span class="jour" id="j3">Jeu</span><span class="jour" id="j4">Ven</span><span class="jour" id="j5">Lun</span><span class="jour" id="j6">Mar</span><span class="jour" id="j7">Mer</span></div>
+      </section>
+
+      <!-- Plan 2 : le choc -->
+      <section id="fond2" class="clip" data-start="9" data-duration="8" data-track-index="1">
+        <div class="ia-g" id="ia-g"><span id="ia-r">IA</span><span id="ia-c">IA</span><span id="ia-b">IA</span></div>
+        <div id="vite"></div>
+        <div class="quest echo" id="qe3"><p>Mais comment</p><p>s’en <b>servir ?</b></p></div>
+        <div class="quest echo" id="qe2"><p>Mais comment</p><p>s’en <b>servir ?</b></p></div>
+        <div class="quest echo" id="qe1"><p>Mais comment</p><p>s’en <b>servir ?</b></p></div>
+        <div class="quest" id="q"><p>Mais comment</p><p>s’en <b>servir ?</b></p></div>
+      </section>
+
+      <!-- feuille qui se déchire -->
+      <section id="tear" class="clip" data-start="16.4" data-duration="1.7" data-track-index="5">
+        <div class="feuille" id="fg"><span class="pt">?</span></div>
+        <div class="feuille" id="fd"><span class="pt">?</span></div>
+      </section>
+
+      <!-- Plan 3 : le Cercle IA -->
+      <section id="texte3" class="clip texte droite" data-start="17.4" data-duration="9.6" data-track-index="2">
+        <div class="phrase" id="p3">
+          <div class="lockup">
+            <div class="insigne" id="insigne"><img src="assets/insigne-edgt.png" alt="Insigne de l’École de Guerre – Terre" /></div>
+            <div><span class="surtitre" id="surtitre">Cercle IA</span><span class="org-masque"><span class="org" id="org">École de Guerre – Terre</span></span></div>
+          </div>
+          <div class="mots">
+            <p class="ligne" id="w1"><i style="background:var(--lo-1)"></i>Aider</p>
+            <p class="ligne" id="w2"><i style="background:var(--lo-2)"></i>Accompagner</p>
+            <p class="ligne" id="w3"><i style="background:var(--lo-3)"></i>Transformer</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Plan 4 : les cartes -->
+      <section id="cartes" class="clip" data-start="27" data-duration="6" data-track-index="2">
+        <div class="cc " id="cc0" style="left:70px;top:110px"><div class="et"><span>Tableau de suivi</span><span class="ok">✓ complété</span></div><div class="mini"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="cc " id="cc1" style="left:70px;top:520px"><div class="et"><span>Compte rendu</span><span class="ok">✓ complété</span></div><div class="barres"><b><u></u></b><b><u></u></b><b><u></u></b><b><u></u></b><b><u></u></b></div></div><div class="cc " id="cc2" style="left:690px;top:640px"><div class="et"><span>Planning</span><span class="ok">✓ complété</span></div><div class="barres gantt"><b><u></u></b><b><u></u></b><b><u></u></b><b><u></u></b><b><u></u></b></div></div>
+      </section>
+
+      <!-- Plan 5 -->
+      <section id="texte5" class="clip texte droite" data-start="37.2" data-duration="2.3" data-track-index="2">
+        <div class="phrase" id="p5">
+          <div class="repere"><span class="num">06</span><span class="filet" style="background:var(--rouge)"></span></div>
+          <p class="ligne decoupe">Nous allons</p>
+          <p class="ligne decoupe"><em>vaincre.</em></p>
+        </div>
+      </section>
+
+      <section id="calque-carte" class="clip" data-start="39.2" data-duration="5.8" data-track-index="3">
+        <div class="carte" id="carte">
+          <div class="entete">
+            <div class="insigne" id="insigne2"><img src="assets/insigne-edgt.png" alt="Insigne de l’École de Guerre – Terre" /></div>
+            <div><span class="surtitre" id="surtitre2">Cercle IA</span><span class="org-masque"><span class="org" id="org2">École de Guerre – Terre</span></span></div>
+          </div>
+          <div class="tricolore"><i></i><i></i><i></i></div>
+          <h2 class="appel"><span class="ligne decoupe">Ne loupe pas</span><span class="ligne decoupe"><em>encore le train.</em></span></h2>
+          <div class="rejoins" id="rejoins"><span>Rejoins-nous</span><svg viewBox="0 0 84 84" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 42h60M46 18l24 24-24 24"/></svg></div>
+        </div>
+      </section>
+
+      <section id="calque-mentions" class="clip" data-start="0" data-duration="45" data-track-index="4">
+        <div id="np">NON PROTÉGÉ</div>
+        <div id="ia">Réalisé avec assistance IA</div>
+      </section>
+
+      <audio id="bande-son" src="assets/bande-son.wav" data-start="0" data-duration="45" data-track-index="9" data-volume="1"></audio>
+    </div>
+
+    <script>
+      (function () {
+        var ID = "clip-cercle-ia-v3", DUR = 45, W = 1920, H = 1080, IPS = 30;
+
+        /* ---------- Chronologie (secondes). Coupes et temps forts tombent sur la pulsation, 120 à la minute. ---------- */
+        var T = {
+          off: 17,                               // le chantier démarre à 17 s ; les temps ci-dessous sont relatifs à off, sauf le train (absolus)
+          bati: 0.08, cadenceBati: 0.92,        // le premier bloc touche le sol à 17,5 s
+          lignes: 3.5, pasLigne: 0.5,           // six lignes, une par temps, de 20,5 à 23 s
+          trainEntre: 33.0, trainArret: 34.5, trainPart: 35.5, trainSortie: 2.6
+        };
+        /* Qualité : "finale" par défaut ; apercu.js et l'outil de rendu peuvent demander "apercu" ou "brouillon". */
+        var QUALITES = { finale: { sous: 6, halo: true }, apercu: { sous: 2, halo: true }, brouillon: { sous: 1, halo: true } };
+        function qualite() { return QUALITES[window.__clipQualite] || QUALITES.finale; }
+
+        var css = getComputedStyle(document.documentElement);
+        function C(nom) { return css.getPropertyValue(nom).trim(); }
+        var LO = [0, 1, 2, 3, 4, 5].map(function (i) { return C("--lo-" + i); });
+
+        var E = {
+          out3: gsap.parseEase("power3.out"), out4: gsap.parseEase("power4.out"), expo: gsap.parseEase("expo.out"),
+          out2: gsap.parseEase("power2.out"), in2: gsap.parseEase("power2.in"), inOut2: gsap.parseEase("power2.inOut"),
+          sine: gsap.parseEase("sine.inOut"), back: gsap.parseEase("back.out(1.7)")
+        };
+        function clamp(x) { return Math.max(0, Math.min(1, x)); }
+        function seg(t, debut, duree) { return clamp((t - debut) / duree); }
+        function lerp(a, b, p) { return a + (b - a) * p; }
+        function rad(d) { return d * Math.PI / 180; }
+        var graine = 7;
+        function alea() { graine = (graine * 16807) % 2147483647; return graine / 2147483647; }
+
+        /* ================================ SCÈNE 3D ================================ */
+        var cv = document.getElementById("scene");
+        var renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: false, preserveDrawingBuffer: true });
+        renderer.setPixelRatio(1);
+        renderer.setSize(W, H, false);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFShadowMap;
+
+        var scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(C("--brume"), 70, 270);
+        // ciel : dégradé vertical, plus clair vers l'horizon
+        (function () {
+          var c = document.createElement("canvas");
+          c.width = 4; c.height = 256;
+          var g = c.getContext("2d"), d = g.createLinearGradient(0, 0, 0, 256);
+          d.addColorStop(0, C("--ciel-haut")); d.addColorStop(0.42, C("--nuit")); d.addColorStop(0.62, C("--ciel-bas")); d.addColorStop(1, C("--brume"));
+          g.fillStyle = d; g.fillRect(0, 0, 4, 256);
+          scene.background = new THREE.CanvasTexture(c);
+        })();
+        var cam = new THREE.PerspectiveCamera(24, W / H, 0.5, 600);
+
+        scene.add(new THREE.HemisphereLight(0xc4d0ee, 0x0b1222, 0.5));
+        var soleil = new THREE.DirectionalLight(0xffe6c8, 0.62);
+        var SOLEIL = [9, 22, 16];
+        soleil.position.set(SOLEIL[0], SOLEIL[1], SOLEIL[2]);
+        soleil.castShadow = true;
+        soleil.shadow.mapSize.set(2048, 2048);
+        soleil.shadow.camera.left = -30; soleil.shadow.camera.right = 30;
+        soleil.shadow.camera.top = 30; soleil.shadow.camera.bottom = -30;
+        soleil.shadow.camera.near = 1; soleil.shadow.camera.far = 90;
+        soleil.shadow.bias = -0.0006;
+        scene.add(soleil);
+        var appoint = new THREE.DirectionalLight(0x6f8fd6, 0.26);
+        appoint.position.set(-16, 8, -4);
+        scene.add(appoint);
+
+        var monde = new THREE.Group();
+        scene.add(monde);
+        var sol = new THREE.Mesh(new THREE.PlaneGeometry(700, 700), new THREE.MeshLambertMaterial({ color: C("--sol") }));
+        sol.rotation.x = -Math.PI / 2;
+        sol.receiveShadow = true;
+        monde.add(sol);
+        var trame = new THREE.GridHelper(160, 80, C("--trait"), C("--trait"));
+        trame.position.y = 0.01;
+        trame.material.transparent = true;
+        trame.material.opacity = 0.2;
+        monde.add(trame);
+
+        // étoiles sur un dôme lointain (visibles seulement dans les plans bas)
+        (function () {
+          var pts = [];
+          for (var s = 0; s < 260; s++) {
+            var az = alea() * Math.PI * 2, el = rad(lerp(5, 70, alea())), r = 420;
+            pts.push(r * Math.sin(az) * Math.cos(el), r * Math.sin(el), r * Math.cos(az) * Math.cos(el));
+          }
+          var geo = new THREE.BufferGeometry();
+          geo.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+          var mat = new THREE.PointsMaterial({ color: new THREE.Color(1.5, 1.6, 1.9), size: 2.4, sizeAttenuation: false, fog: false });
+          scene.add(new THREE.Points(geo, mat));
+        })();
+
+        /* ----- textures générées : halo rond, ombre de contact ----- */
+        var texHalo = (function () {
+          var c = document.createElement("canvas");
+          c.width = c.height = 128;
+          var g = c.getContext("2d"), d = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+          d.addColorStop(0, "#ffffff"); d.addColorStop(0.35, "#6e6e6e"); d.addColorStop(0.7, "#1c1c1c"); d.addColorStop(1, "#000000");
+          g.fillStyle = d; g.fillRect(0, 0, 128, 128);
+          return new THREE.CanvasTexture(c);
+        })();
+        function texContact(lx, lz) {
+          var c = document.createElement("canvas");
+          c.width = 256; c.height = 128;
+          var g = c.getContext("2d");
+          g.fillStyle = "#000"; g.fillRect(0, 0, 256, 128);
+          g.filter = "blur(9px)";
+          g.fillStyle = "#fff"; g.fillRect(128 - lx * 128, 64 - lz * 64, lx * 256, lz * 128);
+          return new THREE.CanvasTexture(c);
+        }
+        var texFumee = (function () {
+          var c = document.createElement("canvas");
+          c.width = c.height = 64;
+          var g = c.getContext("2d"), d = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+          d.addColorStop(0, "rgba(255,255,255,0.9)"); d.addColorStop(0.5, "rgba(255,255,255,0.35)"); d.addColorStop(1, "rgba(255,255,255,0)");
+          g.fillStyle = d; g.fillRect(0, 0, 64, 64);
+          return new THREE.CanvasTexture(c);
+        })();
+        var halos = [];
+        // Tache de lumière posée à plat : remplace l'éclairage réel que la nuit demanderait.
+        function halo(x, y, z, lx, lz, couleur, parent) {
+          var m = new THREE.Mesh(new THREE.PlaneGeometry(lx, lz), new THREE.MeshBasicMaterial({ map: texHalo, color: couleur, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+          m.rotation.x = -Math.PI / 2;
+          m.position.set(x, y, z);
+          m.renderOrder = 2;
+          (parent || monde).add(m);
+          var h = { m: m, base: new THREE.Color(couleur) };
+          halos.push(h);
+          return h;
+        }
+        function forceHalo(h, f) { h.m.visible = f > 0.003; h.m.material.color.copy(h.base).multiplyScalar(f); }
+
+        /* ----- matériaux et pièces ----- */
+        var cacheMat = {};
+        function M(c, degrade) {
+          var cle = c + (degrade ? "|d" : "");
+          if (!cacheMat[cle]) cacheMat[cle] = new THREE.MeshLambertMaterial({ color: c, vertexColors: !!degrade });
+          return cacheMat[cle];
+        }
+        function facettes(g) { var n = g.toNonIndexed(); n.computeVertexNormals(); return n; }
+        // Dégradé sombre en pied de mur : tient lieu d'occlusion ambiante.
+        function ombrerPied(g, h) {
+          var p = g.attributes.position, col = new Float32Array(p.count * 3);
+          for (var i = 0; i < p.count; i++) {
+            var v = clamp(p.getY(i) / h + 0.5), s = lerp(0.6, 1, v * v * (3 - 2 * v));
+            col[i * 3] = col[i * 3 + 1] = col[i * 3 + 2] = s;
+          }
+          g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+          return g;
+        }
+        var pieces = [];
+        function ombres(m) { m.traverse(function (o) { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } }); }
+        function poser(m, t0, mode) {
+          ombres(m);
+          monde.add(m);
+          if (mode === "fixe") return m;
+          var boite = new THREE.Box3().setFromObject(m);
+          pieces.push({ m: m, t0: T.bati + Math.max(0, t0 - 0.3) * T.cadenceBati, mode: mode || "chute", y: m.position.y, h: boite.max.y - boite.min.y });
+          return m;
+        }
+        function bloc(w, h, d, x, yb, z, c, t0, mode, mat) {
+          var haut = h >= 1.5 && !mat;
+          var g = new THREE.BoxGeometry(w, h, d);
+          var m = new THREE.Mesh(haut ? ombrerPied(g, h) : g, mat || M(c, haut));
+          m.position.set(x, yb + h / 2, z);
+          return poser(m, t0, mode);
+        }
+        function cyl(rt, rb, h, n, x, yb, z, c, t0, mode) {
+          var m = new THREE.Mesh(facettes(new THREE.CylinderGeometry(rt, rb, h, n)), M(c));
+          m.position.set(x, yb + h / 2, z);
+          return poser(m, t0, mode);
+        }
+
+        var PIERRE = C("--pierre"), PIERRE2 = C("--pierre-2"), TOIT = C("--toit"), MARINE = C("--marine");
+        // socle, talus et voie ferrée : en place dès la première image
+        bloc(26, 0.4, 12, 0, 0, -0.6, C("--socle"), 0, "fixe");
+        bloc(140, 0.4, 1.6, 0, 0, 6.2, C("--talus"), 0, "fixe");
+        (function () {
+          var geo = new THREE.BoxGeometry(0.18, 0.05, 0.9), mat = M(C("--traverse"));
+          var lot = new THREE.InstancedMesh(geo, mat, 156), o = new THREE.Object3D();
+          for (var k = 0; k < 156; k++) { o.position.set(-70 + k * 0.9, 0.425, 6.2); o.updateMatrix(); lot.setMatrixAt(k, o.matrix); }
+          lot.receiveShadow = true;
+          monde.add(lot);
+        })();
+        bloc(140, 0.08, 0.08, 0, 0.45, 5.95, C("--rail"), 0, "fixe");
+        bloc(140, 0.08, 0.08, 0, 0.45, 6.45, C("--rail"), 0, "fixe");
+        // ombre de contact sous le bâtiment : apparaît avec la construction
+        var contact = new THREE.Mesh(new THREE.PlaneGeometry(31, 11), new THREE.MeshBasicMaterial({ color: 0x000000, alphaMap: texContact(0.8, 0.62), transparent: true, opacity: 0, depthWrite: false }));
+        contact.rotation.x = -Math.PI / 2;
+        contact.position.set(0, 0.412, -0.4);
+        contact.renderOrder = 1;
+        monde.add(contact);
+
+        // corps du bâtiment, du centre vers les ailes
+        bloc(5.2, 4.6, 4.6, 0, 0.4, -0.3, PIERRE, 0.3);
+        bloc(7, 3, 3.6, -6, 0.4, -0.6, PIERRE, 0.5); bloc(7, 3, 3.6, 6, 0.4, -0.6, PIERRE, 0.6);
+        bloc(2.6, 3.8, 4.4, -10.6, 0.4, -0.6, PIERRE2, 0.75); bloc(2.6, 3.8, 4.4, 10.6, 0.4, -0.6, PIERRE2, 0.85);
+        bloc(7.2, 0.7, 3.8, -6, 3.4, -0.6, TOIT, 1.0); bloc(7.2, 0.7, 3.8, 6, 3.4, -0.6, TOIT, 1.08);
+        bloc(2.8, 0.7, 4.6, -10.6, 4.2, -0.6, TOIT, 1.15); bloc(2.8, 0.7, 4.6, 10.6, 4.2, -0.6, TOIT, 1.2);
+        bloc(4.2, 0.8, 3.6, 0, 5.0, -0.3, PIERRE2, 1.3);
+        cyl(1.4, 1.4, 0.9, 12, 0, 5.8, -0.3, PIERRE2, 1.45);
+        var dome = new THREE.Mesh(facettes(new THREE.SphereGeometry(1.6, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2)), M(TOIT));
+        dome.position.set(0, 6.7, -0.3);
+        poser(dome, 1.6);
+        cyl(0.3, 0.34, 0.6, 8, 0, 8.25, -0.3, PIERRE, 1.75);
+        cyl(0.04, 0.04, 1.5, 6, 0, 8.85, -0.3, PIERRE2, 1.85, "eclot");
+        var drapeau = new THREE.Group();
+        drapeau.position.set(0.02, 10.13, -0.3);
+        [C("--bleu-fort"), C("--blanc"), C("--rouge-fort")].forEach(function (c, i) {
+          var bande = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.46, 0.03), M(c));
+          bande.position.x = 0.18 + i * 0.32;
+          drapeau.add(bande);
+        });
+        poser(drapeau, 1.95, "eclot");
+        bloc(1.1, 1.8, 0.06, 0, 0.4, 2.02, MARINE, 1.0, "eclot");
+        bloc(5.8, 0.15, 0.9, 0, 0.4, 2.9, PIERRE2, 0.9, "eclot");
+        [-1.8, -0.6, 0.6, 1.8].forEach(function (x, i) { cyl(0.2, 0.22, 3.6, 8, x, 0.4, 2.35, PIERRE, 1.9 + i * 0.06); });
+        bloc(5.6, 0.4, 0.9, 0, 4.0, 2.2, PIERRE2, 2.2);
+        var tri = new THREE.Shape();
+        tri.moveTo(-2.8, 0); tri.lineTo(2.8, 0); tri.lineTo(0, 1.0); tri.lineTo(-2.8, 0);
+        var fronton = new THREE.Mesh(new THREE.ExtrudeGeometry(tri, { depth: 0.7, bevelEnabled: false }), M(PIERRE));
+        fronton.position.set(0, 4.4, 1.8);
+        poser(fronton, 2.35);
+
+        // fenêtres : une couleur de ligne d'opération par tranche de façade
+        var fenetres = [], couleurVitre = new THREE.Color(C("--vitre"));
+        function fenetre(x, y, z, tp) {
+          var mat = new THREE.MeshLambertMaterial({ color: C("--vitre"), emissive: "#000000" });
+          bloc(0.48, 0.72, 0.06, x, y - 0.36, z, null, tp + 0.4, "eclot", mat);
+          var lo = Math.min(5, Math.max(0, Math.floor((x + 12) / 4)));
+          var decal = (Math.sin(x * 12.9 + y * 7.1) * 0.5 + 0.5) * 0.24;
+          fenetres.push({ mat: mat, lo: lo, cible: new THREE.Color(LO[lo]), t: T.lignes + lo * T.pasLigne + 0.45 + decal });
+        }
+        [-1, 1].forEach(function (cote) {
+          for (var i = 0; i < 8; i++) [1.5, 2.7].forEach(function (y) { fenetre(cote * (9 - i * 0.85), y, 1.235, cote < 0 ? 0.5 : 0.6); });
+          [-0.7, 0, 0.7].forEach(function (dx) { [1.6, 3.0].forEach(function (y) { fenetre(cote * 10.6 + dx, y, 1.635, cote < 0 ? 0.75 : 0.85); }); });
+        });
+        [-1.5, 1.5].forEach(function (x) { [1.6, 3.2].forEach(function (y) { fenetre(x, y, 2.035, 0.3); }); });
+        fenetre(0, 3.2, 2.035, 0.3);
+        // la lumière des fenêtres retombe sur le parvis, tranche par tranche
+        var retombees = LO.map(function (c, i) { return halo(-10 + i * 4, 0.43, 2.6, 5.2, 4.0, c); });
+
+        // six lignes d'opération, de la voie vers le bâtiment, et leurs impulsions
+        var rubans = [], impulsions = [];
+        LO.forEach(function (c, i) {
+          var g = new THREE.BoxGeometry(0.36, 0.04, 2.8);
+          g.translate(0, 0, -1.4);
+          var ruban = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ color: c, emissive: c, emissiveIntensity: 1 }));
+          ruban.position.set(-3.75 + i * 1.5, 0.42, 5.3);
+          monde.add(ruban);
+          rubans.push({ m: ruban, lueur: halo(ruban.position.x, 0.44, 3.9, 2.4, 4.6, c) });
+          for (var k = 0; k < 2; k++) {
+            var imp = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.16, 0.3), new THREE.MeshLambertMaterial({ color: C("--blanc"), emissive: c, emissiveIntensity: 2.6 }));
+            imp.position.set(ruban.position.x, 0.52, 5.3);
+            monde.add(imp);
+            impulsions.push({ m: imp, i: i, k: k });
+          }
+        });
+
+        // éclat de lumière au premier impact
+        var eclatImpact = halo(0, 0.44, -0.3, 15, 13, C("--bleu"));
+
+        /* ----- décor : modèles KayKit du portail Quartier IA ----- */
+        var KK = window.MODELES_KAYKIT, tamponKK = null, geosKK = {};
+        if (KK) {
+          var brut = atob(KK.donnees), octets = new Uint8Array(brut.length);
+          for (var b = 0; b < brut.length; b++) octets[b] = brut.charCodeAt(b);
+          tamponKK = octets.buffer;
+        }
+        var matKK = new THREE.MeshLambertMaterial({ vertexColors: true });
+        // Les couleurs de jour sont ramenées à une teinte de nuit.
+        function geoKK(nom, desat, gain) {
+          var cle = nom + "|" + desat + "|" + gain;
+          if (geosKK[cle]) return geosKK[cle];
+          var m = KK.index[nom], g = new THREE.BufferGeometry();
+          g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(tamponKK, m.p, m.n * 3), 3));
+          g.setAttribute("normal", new THREE.BufferAttribute(new Int8Array(tamponKK, m.nm, m.n * 3), 3, true));
+          var cb = new Uint8Array(tamponKK, m.c, m.n * 3), cf = new Float32Array(m.n * 3);
+          for (var i = 0; i < m.n; i++) {
+            var r = cb[i * 3] / 255, v = cb[i * 3 + 1] / 255, bl = cb[i * 3 + 2] / 255, l = 0.3 * r + 0.59 * v + 0.11 * bl;
+            cf[i * 3] = lerp(r, l * 0.62, desat) * gain; cf[i * 3 + 1] = lerp(v, l * 0.74, desat) * gain; cf[i * 3 + 2] = lerp(bl, l * 1.08, desat) * gain;
+          }
+          g.setAttribute("color", new THREE.BufferAttribute(cf, 3));
+          g.setIndex(new THREE.BufferAttribute(new Uint16Array(tamponKK, m.ix, m.i), 1));
+          return (geosKK[cle] = g);
+        }
+        function modele(nom, x, z, ry, e, desat, gain) {
+          var m = new THREE.Mesh(geoKK(nom, desat, gain), matKK);
+          m.position.set(x, 0, z);
+          m.rotation.y = ry || 0;
+          m.scale.setScalar(e || 1);
+          ombres(m);
+          monde.add(m);
+          return m;
+        }
+        var lampadaires = [];
+        if (KK) {
+          // immeubles au loin, à gauche et derrière : le côté droit reste libre pour le texte
+          var matLampe = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.92, 0.7, 0.42), fog: true });
+          [["building_G", -27, -31, 0], ["building_C", -40, -30, 0], ["building_E", -53, -32, 0], ["building_H", -67, -29, 0], ["building_A", -82, -31, 0],
+           ["building_H", -34, -46, 0], ["building_G", -59, -47, 0], ["building_C", -47, -62, 0],
+           ["building_E", -150, -14, Math.PI / 2], ["building_G", -165, 4, Math.PI / 2], ["building_A", -150, 22, Math.PI / 2], ["building_C", -172, 30, Math.PI / 2],
+           ["building_H", -185, -12, Math.PI / 2], ["building_E", -190, 14, Math.PI / 2]].forEach(function (d) {
+            var im = modele(d[0], d[1], d[2], d[3], 1, 0.72, 0.5), f = KK.index[d[0]].facade, haut = KK.index[d[0]].max[1];
+            // quelques fenêtres allumées, tirées à graine fixe
+            for (var k = 0; k < 6; k++) {
+              var q = new THREE.Mesh(new THREE.PlaneGeometry(0.46, 0.64), matLampe), enX = alea() > 0.5, ht = lerp(3.2, haut - 2.6, alea());
+              if (enX) { q.position.set(f[1] + 0.07, ht, lerp(f[2] + 0.8, f[3] - 0.8, alea())); q.rotation.y = Math.PI / 2; }
+              else q.position.set(lerp(f[0] + 0.8, f[1] - 0.8, alea()), ht, f[3] + 0.07);
+              im.add(q);
+            }
+          });
+          modele("watertower", -44, -19, 0.4, 2.4, 0.6, 0.55);
+          // parvis : lampadaires, buissons, bancs
+          [-10.4, -5.1, 5.1, 10.4].forEach(function (x) {
+            modele("streetlight", x, 4.7, Math.PI / 2, 0.62, 0.4, 0.62);
+            var ampoule = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 6), new THREE.MeshBasicMaterial({ color: new THREE.Color(3.2, 2.5, 1.5), fog: false }));
+            ampoule.position.set(x, 2.98, 5.07);
+            monde.add(ampoule);
+            lampadaires.push(halo(x, 0.44, 5.0, 6.2, 6.2, C("--lampe")));
+          });
+          [-9.3, -7.4, -4.4, 4.4, 7.4, 9.3].forEach(function (x) { modele("bush", x, 1.75, alea() * 6, 0.4, 0.3, 0.55); });
+          modele("bench", -7.3, 3.7, 0, 0.75, 0.4, 0.7); modele("bench", 7.3, 3.7, 0, 0.75, 0.4, 0.7);
+        }
+
+
+        /* ----- figurines : l'équipe se rassemble sur le parvis (plan 4) ----- */
+        var figurines = [];
+        (function () {
+          var gTete = new THREE.SphereGeometry(0.14, 10, 8), gCorps = facettes(new THREE.CylinderGeometry(0.15, 0.2, 0.62, 8));
+          var gSac = new THREE.BoxGeometry(0.28, 0.3, 0.1);
+          for (var k = 0; k < 14; k++) {
+            var g = new THREE.Group();
+            var corps = new THREE.Mesh(gCorps, M(k % 3 === 0 ? MARINE : LO[k % 6])); corps.position.y = 0.31; g.add(corps);
+            var tete = new THREE.Mesh(gTete, M(PIERRE)); tete.position.y = 0.76; g.add(tete);
+            var sac = new THREE.Mesh(gSac, M(C("--toit"))); sac.position.set(0, 0.36, -0.16); g.add(sac);
+            ombres(g);
+            var cote = k % 2 ? 1 : -1;
+            var cible = [(k - 6.5) * 0.9, 0.4, 3.0 + (k % 3) * 0.55];
+            figurines.push({ g: g, depart: [cote * (13 + (k % 4) * 1.4), 0.4, 4.6 + (k % 3) * 0.5], cible: cible, retard: k * 0.07, k: k });
+            monde.add(g); g.visible = false;
+          }
+        })();
+        function animerFigurines(ta) {
+          for (var i = 0; i < figurines.length; i++) {
+            var f = figurines[i], p = seg(ta, 27.6 + f.retard, 3.4);
+            f.g.visible = ta > 27.5 + f.retard;
+            if (!f.g.visible) continue;
+            var pe = E.inOut2(p), marche = p < 1 ? Math.abs(Math.sin(ta * 9 + f.k)) * 0.07 : Math.abs(Math.sin(ta * 2.2 + f.k)) * 0.015;
+            f.g.position.set(lerp(f.depart[0], f.cible[0], pe), 0.4 + marche, lerp(f.depart[2], f.cible[2], pe));
+            f.g.rotation.y = p < 1 ? (f.depart[0] > 0 ? -Math.PI / 2 : Math.PI / 2) : lerp(0, 0.2, Math.sin(f.k));
+            var s = Math.max(0.01, E.back(seg(ta, 27.5 + f.retard, 0.4)));
+            f.g.scale.set(s, s, s);
+          }
+        }
+
+        /* ----- train ----- */
+        var train = new THREE.Group();
+        train.position.set(-40, 0, 6.2);
+        monde.add(train);
+        function wagon(geo, c, x, y, z, rot) {
+          var m = new THREE.Mesh(geo, typeof c === "string" ? M(c) : c);
+          m.position.set(x, y, z || 0);
+          if (rot) m.rotation.set(rot[0], rot[1], rot[2]);
+          m.castShadow = true;
+          train.add(m);
+          return m;
+        }
+        var roue = facettes(new THREE.CylinderGeometry(0.32, 0.32, 0.18, 12));
+        var ROUE = C("--roue"), BLEU = C("--bleu-fort");
+        wagon(new THREE.BoxGeometry(2.8, 0.25, 1.0), MARINE, 0, 0.95);
+        wagon(facettes(new THREE.CylinderGeometry(0.45, 0.45, 1.7, 10)), BLEU, 0.45, 1.55, 0, [0, 0, Math.PI / 2]);
+        wagon(new THREE.BoxGeometry(1.0, 1.3, 1.1), BLEU, -0.75, 1.7);
+        wagon(new THREE.BoxGeometry(1.2, 0.12, 1.3), MARINE, -0.75, 2.4);
+        wagon(new THREE.BoxGeometry(1.02, 0.14, 1.12), C("--rouge-fort"), -0.75, 1.3);
+        wagon(facettes(new THREE.CylinderGeometry(0.14, 0.18, 0.5, 8)), MARINE, 1.0, 2.2);
+        wagon(new THREE.SphereGeometry(0.13, 10, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(3.6, 3.2, 2.3), fog: false }), 1.33, 1.55);
+        [-0.9, 0, 0.9].forEach(function (x) { [-0.45, 0.45].forEach(function (z) { wagon(roue, ROUE, x, 0.81, z, [Math.PI / 2, 0, 0]); }); });
+        [LO[1], LO[2], LO[5]].forEach(function (c, k) {
+          var cx = -3.0 - k * 2.7;
+          wagon(new THREE.BoxGeometry(0.4, 0.12, 0.3), MARINE, cx + 1.35, 1.0);
+          wagon(new THREE.BoxGeometry(2.4, 1.0, 1.0), c, cx, 1.45);
+          wagon(new THREE.BoxGeometry(2.5, 0.1, 1.1), PIERRE, cx, 2.0);
+          [-0.8, 0.8].forEach(function (x) { [-0.45, 0.45].forEach(function (z) { wagon(roue, ROUE, cx + x, 0.81, z, [Math.PI / 2, 0, 0]); }); });
+        });
+        wagon(new THREE.BoxGeometry(0.06, 0.2, 0.5), new THREE.MeshBasicMaterial({ color: new THREE.Color(3.4, 0.5, 0.4), fog: false }), -9.63, 1.25);
+        var faisceau = halo(5.2, 0.47, 0, 9, 3.4, C("--phare"), train);
+        var feuArriere = halo(-10.6, 0.47, 0, 3.2, 2.4, C("--rouge"), train);
+        var fumees = [];
+        for (var f = 0; f < 9; f++) {
+          var bouffee = new THREE.Sprite(new THREE.SpriteMaterial({ map: texFumee, color: C("--attenue"), transparent: true, opacity: 0, depthWrite: false }));
+          train.add(bouffee);
+          fumees.push(bouffee);
+        }
+        function xTrain(t) {
+          if (t < T.trainArret) return lerp(-34, 0, E.out3(seg(t, T.trainEntre, T.trainArret - T.trainEntre)));
+          if (t < T.trainPart) return 0;
+          return 60 * E.in2(seg(t, T.trainPart, T.trainSortie));
+        }
+
+        /* ----- état de la scène à l'instant t ----- */
+        function etat(ta) {
+          var t = ta - T.off, i, p;
+          for (i = 0; i < pieces.length; i++) {
+            var it = pieces[i];
+            p = seg(t, it.t0, it.mode === "eclot" ? 0.4 : 0.62);
+            it.m.visible = p > 0;
+            if (!it.m.visible) continue;
+            if (it.mode === "chute") {           // tombe, s'écrase un peu, se cale
+              var chute = clamp(p / 0.68), cale = clamp((p - 0.68) / 0.32);
+              var taille = Math.max(0.01, E.out3(clamp(p / 0.3)));
+              var ecrase = Math.sin(cale * Math.PI) * 0.1 * (1 - cale);
+              it.m.position.y = it.y + (1 - E.in2(chute)) * 3.2 - it.h / 2 * ecrase;
+              it.m.scale.set(taille * (1 + ecrase * 0.5), taille * (1 - ecrase), taille * (1 + ecrase * 0.5));
+            } else {
+              var e = Math.max(0.01, E.back(p));
+              it.m.scale.set(e, e, e);
+            }
+          }
+          contact.material.opacity = 0.62 * E.out2(seg(t, 0.45, 2.0));
+          forceHalo(eclatImpact, t >= 0.5 ? Math.exp(-(t - 0.5) * 6.5) * 0.85 : 0);
+          // lignes d'opération, impulsions, fenêtres et leur retombée
+          for (i = 0; i < rubans.length; i++) {
+            var debut = T.lignes + i * T.pasLigne;
+            p = seg(t, debut, 0.6);
+            rubans[i].m.visible = p > 0;
+            rubans[i].m.scale.z = Math.max(0.01, E.out3(p));
+            var eclair = t > debut ? Math.exp(-(t - debut) * 2.6) : 0;
+            rubans[i].m.material.emissiveIntensity = 1.15 + eclair * 2.2;
+            forceHalo(rubans[i].lueur, E.out2(p) * (0.16 + eclair * 0.55));
+          }
+          for (i = 0; i < impulsions.length; i++) {
+            var imp = impulsions[i], depart = T.lignes + imp.i * T.pasLigne + 0.6;
+            imp.m.visible = t > depart;
+            if (!imp.m.visible) continue;
+            var ph = ((t - depart) / 1.5 + imp.k * 0.5) % 1, gr = Math.max(0.01, Math.sin(ph * Math.PI));
+            imp.m.position.z = 5.3 - E.sine(ph) * 2.8;
+            imp.m.scale.set(gr, gr, gr);
+          }
+          var somme = [0, 0, 0, 0, 0, 0], nombre = [0, 0, 0, 0, 0, 0];
+          for (i = 0; i < fenetres.length; i++) {
+            var fe = fenetres[i];
+            p = E.out2(seg(t, fe.t, 0.35));
+            fe.mat.color.copy(couleurVitre).lerp(fe.cible, p * 0.6);
+            fe.mat.emissive.copy(fe.cible);
+            fe.mat.emissiveIntensity = p * (1.5 + 0.16 * Math.sin(t * 5 + fe.t * 9));
+            somme[fe.lo] += p; nombre[fe.lo]++;
+          }
+          for (i = 0; i < 6; i++) forceHalo(retombees[i], 0.3 * somme[i] / nombre[i]);
+          for (i = 0; i < lampadaires.length; i++) forceHalo(lampadaires[i], 0.4 + 0.025 * Math.sin(t * 7 + i * 2));
+          drapeau.rotation.y = Math.sin(t * 2.2) * 0.18;
+          animerFigurines(ta);
+          // train
+          train.visible = ta > T.trainEntre - 0.2;
+          train.position.x = xTrain(ta);
+          forceHalo(faisceau, 0.6);
+          forceHalo(feuArriere, 0.5);
+          var roule = (ta > T.trainEntre && ta < T.trainArret - 0.15) || ta > T.trainPart;
+          for (i = 0; i < fumees.length; i++) {
+            var a = (t * 1.3 + i / 9) % 1, gf = 0.5 + a * 1.9;
+            fumees[i].position.set(1.0 - a * (roule ? 3.2 : 0.8), 2.6 + a * 2.2, a * 0.3);
+            fumees[i].scale.set(gf, gf, gf);
+            fumees[i].material.opacity = (1 - a) * (1 - a) * (roule ? 0.5 : 0.26);
+          }
+        }
+
+        /* ----- quatre plans, quatre caméras ----- */
+        function orbite(c, az, el, d) {
+          var ce = Math.cos(el);
+          return [c[0] + d * Math.sin(az) * ce, c[1] + d * Math.sin(el), c[2] + d * Math.cos(az) * ce];
+        }
+        function numeroPlan(t) { return t < 22 ? 1 : t < 27 ? 2 : t < 33 ? 3 : t < 37 ? 4 : 5; }
+        function bornesPlan(n) { return [[0, 22], [22, 27], [27, 33], [33, 37], [37, DUR]][n - 1]; }
+        function prise(t) {
+          var u, s, c;
+          switch (numeroPlan(t)) {
+            case 1:   // grue qui se pose sur le chantier
+              u = E.out3(seg(t, 17, 5)); c = [0, 3, 0.5];
+              return { pos: orbite(c, rad(lerp(52, 38, u)), rad(lerp(29, 22, u)), lerp(66, 48, u)), cible: c, fov: 24, dx: 250, dy: -50 };
+            case 2:   // à hauteur d'homme, on avance le long des lignes
+              u = E.sine(seg(t, 22, 5));
+              return { pos: [lerp(-9.5, -7.2, u), lerp(5.2, 4.6, u), lerp(17, 14.6, u)], cible: [lerp(0.6, 0.9, u), lerp(2.9, 3.2, u), lerp(2.0, 1.4, u)], fov: 42, dx: 180, dy: -64 };
+            case 3:   // l'équipe se rassemble sur le parvis
+              u = E.sine(seg(t, 27, 6)); c = [lerp(1.2, -0.4, u), 2.0, 3.0];
+              return { pos: orbite(c, rad(lerp(22, 6, u)), rad(lerp(14, 10, u)), lerp(27, 21, u)), cible: c, fov: 32, dx: -230, dy: -10 };
+            case 4:   // au ras de la voie, le train vient vers nous
+              u = E.out3(seg(t, 33, 1.6)); s = E.inOut2(seg(t, T.trainPart, 1.3));
+              return { pos: [lerp(8.6, 7.6, u), 1.3, lerp(10.2, 9.5, u)], cible: [lerp(-3, -2, u) + s * 1.6, 1.55, 5.6], fov: 30, dx: -80, dy: -30 };
+            default:  // recul lent, carte finale
+              u = E.out3(seg(t, 37, DUR - 37)); c = [0, 3, 0.5];
+              return { pos: orbite(c, rad(lerp(37, 31, u)), rad(22), lerp(43, 50, u)), cible: c, fov: 24, dx: 520, dy: -40 };
+          }
+        }
+
+        /* ----- chaîne d'image : sous-images cumulées, halo, étalonnage ----- */
+        var optsCible = { type: THREE.HalfFloatType, format: THREE.RGBAFormat, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter };
+        var cibleSous = new THREE.WebGLRenderTarget(W, H, optsCible);
+        var cibleCumul = new THREE.WebGLRenderTarget(W, H, Object.assign({ depthBuffer: false }, optsCible));
+        var camPlein = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), scenePlein = new THREE.Scene();
+        var VERTEX = "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }";
+        var matCumul = new THREE.ShaderMaterial({
+          uniforms: { tex: { value: null }, poids: { value: 1 } }, vertexShader: VERTEX,
+          fragmentShader: "uniform sampler2D tex; uniform float poids; varying vec2 vUv; void main(){ gl_FragColor = vec4(texture2D(tex, vUv).rgb * poids, poids); }",
+          blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor, depthTest: false, depthWrite: false
+        });
+        var matEtalon = new THREE.ShaderMaterial({
+          uniforms: { tex: { value: null }, image: { value: 0 } }, vertexShader: VERTEX, depthTest: false, depthWrite: false,
+          fragmentShader: [
+            "uniform sampler2D tex; uniform float image; varying vec2 vUv;",
+            "float hasard(vec2 p){ vec3 a = fract(vec3(p.xyx) * 0.1031); a += dot(a, a.yzx + 33.33); return fract((a.x + a.y) * a.z); }",
+            "vec3 epaule(vec3 c){",                                                          // comprime les hautes lumières en gardant la teinte
+            "  float m = max(c.r, max(c.g, c.b)), x = max(m - 0.72, 0.0) / 0.28, e = exp(-2.0 * x);",
+            "  float m2 = m < 0.72 ? m : 0.72 + 0.28 * (1.0 - e) / (1.0 + e);",
+            "  c *= m2 / max(m, 0.0001);",
+            "  return mix(c, vec3(m2), smoothstep(1.6, 4.0, m) * 0.7);",
+            "}",
+            "void main(){",
+            "  vec3 c = max(texture2D(tex, vUv).rgb, 0.0);",
+            "  c = pow(c * 1.14, vec3(1.06));",                                              // exposition et contraste
+            "  c = epaule(c);",                                                              // hautes lumières adoucies
+            "  float l = dot(c, vec3(0.2126, 0.7152, 0.0722));",
+            "  c += vec3(-0.010, 0.000, 0.020) * (1.0 - smoothstep(0.0, 0.35, l));",         // ombres froides
+            "  c *= mix(vec3(1.0), vec3(1.035, 1.0, 0.955), smoothstep(0.45, 1.0, l));",     // lumières chaudes
+            "  vec2 q = (vUv - 0.5) * vec2(1.0, 0.82);",
+            "  c *= mix(0.58, 1.0, smoothstep(0.88, 0.28, length(q)));",                     // vignette
+            "  c += (hasard(gl_FragCoord.xy + image * vec2(17.0, 59.0)) - 0.5) * 0.026;",    // grain
+            "  gl_FragColor = vec4(c, 1.0);",
+            "}"
+          ].join("\n")
+        });
+        var plein = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), matCumul);
+        plein.frustumCulled = false;
+        scenePlein.add(plein);
+        var passeHalo = new THREE.UnrealBloomPass(new THREE.Vector2(W, H), 0.72, 0.58, 0.98);
+
+        // suite de Halton : décalages sous-pixel reproductibles
+        function halton(i, base) { var f = 1, r = 0; while (i > 0) { f /= base; r += f * (i % base); i = Math.floor(i / base); } return r; }
+        var cibleV = new THREE.Vector3(), dernier = -1, derniereQualite = null;
+
+        function rendre(t) {
+          if (t < 16.5) return;
+          var q = qualite();
+          if (Math.abs(t - dernier) < 1e-6 && q === derniereQualite) return;
+          dernier = t; derniereQualite = q;
+          var n = q.sous, bornes = bornesPlan(numeroPlan(t)), obturation = 0.5 / IPS;
+          renderer.setRenderTarget(cibleCumul);
+          renderer.setClearColor(0x000000, 0);
+          renderer.clear();
+          for (var k = 0; k < n; k++) {
+            // chaque sous-image a son instant (flou de mouvement) et son décalage (lissage des contours)
+            var ts = n === 1 ? t : t + ((k + 0.5) / n - 0.5) * obturation;
+            ts = Math.max(bornes[0], Math.min(bornes[1] - 1e-4, ts));
+            etat(ts);
+            var v = prise(ts), jx = n === 1 ? 0 : halton(k + 1, 2) - 0.5, jy = n === 1 ? 0 : halton(k + 1, 3) - 0.5;
+            var tsr = ts - T.off, secousse = Math.exp(-Math.max(0, tsr - 0.5) * 9) * (tsr >= 0.5 ? 1 : 0);
+            cam.fov = v.fov;
+            cam.position.set(v.pos[0], v.pos[1] + Math.sin((tsr - 0.5) * 70) * 0.16 * secousse, v.pos[2]);
+            cam.lookAt(cibleV.set(v.cible[0], v.cible[1], v.cible[2]));
+            cam.setViewOffset(W, H, v.dx + jx, v.dy + jy, W, H);
+            // le soleil bouge d'un rien entre sous-images : la pénombre des ombres s'adoucit
+            soleil.position.set(SOLEIL[0] + (halton(k + 1, 5) - 0.5) * (n > 1 ? 0.9 : 0), SOLEIL[1], SOLEIL[2] + (halton(k + 1, 7) - 0.5) * (n > 1 ? 0.9 : 0));
+            renderer.setRenderTarget(cibleSous);
+            renderer.render(scene, cam);
+            plein.material = matCumul;
+            matCumul.uniforms.tex.value = cibleSous.texture;
+            matCumul.uniforms.poids.value = 1 / n;
+            renderer.setRenderTarget(cibleCumul);
+            renderer.autoClear = false;
+            renderer.render(scenePlein, camPlein);
+            renderer.autoClear = true;
+          }
+          if (q.halo) passeHalo.render(renderer, null, cibleCumul, 0, false);
+          plein.material = matEtalon;
+          matEtalon.uniforms.tex.value = cibleCumul.texture;
+          matEtalon.uniforms.image.value = Math.round(t * IPS);
+          renderer.setRenderTarget(null);
+          renderer.render(scenePlein, camPlein);
+        }
+
+        /* ================================ TEXTE, CARTES ET ANIMATION 2D ================================ */
+        Array.prototype.forEach.call(document.querySelectorAll(".decoupe"), function (ligne) {
+          var source = Array.prototype.slice.call(ligne.childNodes);
+          ligne.textContent = "";
+          source.forEach(function (noeud) {
+            var accent = noeud.nodeType === 1;
+            noeud.textContent.split(" ").filter(Boolean).forEach(function (mot) {
+              var m = document.createElement("span"), mi = document.createElement("span");
+              m.className = "m" + (accent ? " accent" : "");
+              mi.className = "mi";
+              mi.textContent = mot;
+              m.appendChild(mi);
+              ligne.appendChild(m);
+              ligne.appendChild(document.createTextNode(" "));
+            });
+          });
+        });
+
+        var tl = gsap.timeline({ paused: true });
+        var horloge = { t: 0 };
+        tl.to(horloge, { t: DUR, duration: DUR, ease: "none", onUpdate: function () { rendre(horloge.t); } }, 0);
+        function $(s) { return document.querySelector(s); }
+
+        // ---------- mentions : sombres sur le plan 1 (papier), claires ensuite
+        tl.set("#np, #ia", { color: "#262c3a" }, 0);
+        tl.set("#np, #ia", { color: "#9aa6bd" }, 9);
+        tl.fromTo("#np", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "sine.out" }, 0.1);
+        tl.fromTo("#ia", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power1.out" }, 0.4);
+
+        // ---------- PLAN 1 (0-9 s) : le quotidien. Un geste mécanique par temps, sans douceur.
+        var NC = 18;
+        for (var c = 0; c < NC; c++) {
+          var tc = 0.5 + c * 0.5;
+          if (c < 17) {
+            tl.set("#t" + c, { opacity: 1 }, tc);
+            tl.fromTo("#t" + c, { backgroundColor: "rgba(38,44,58,0.28)" }, { backgroundColor: "rgba(38,44,58,0)", duration: 0.3, ease: "none" }, tc);
+          }
+          tl.set("#k" + c, { opacity: 1 }, tc - 0.5 + 0.02 > 0 ? tc - 0.5 : 0);
+          tl.set("#k" + c, { opacity: 0 }, tc);
+        }
+        tl.set("#k17", { opacity: 1 }, 8.5);
+        for (var p = 0; p < 8; p++) {
+          var tp = 1.0 + p * 0.5;
+          tl.set("#pl" + p, { opacity: 1 }, tp);
+          tl.fromTo("#pl" + p, { x: -14 }, { x: 0, duration: 0.18, ease: "power2.out" }, tp);
+          if (p > 0) tl.set("#pl" + (p - 1), { opacity: 0.45 }, tp);
+        }
+        tl.set("#pl7", { opacity: 0.45 }, 5.0);
+        [3.3, 3.8, 4.3, 4.8].forEach(function (ts, i) {
+          tl.fromTo("#s" + i, { opacity: 0, scale: 2.4 }, { opacity: 0.92, scale: 1, duration: 0.14, ease: "power4.out" }, ts);
+          tl.fromTo("#tab", { x: 0 }, { x: 4, duration: 0.05, yoyo: true, repeat: 3, ease: "none" }, ts + 0.1);
+        });
+        tl.fromTo("#agenda", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 5.0);
+        for (var j = 0; j < 8; j++) {
+          tl.set("#j" + j, { opacity: 1 }, 5.0 + j * 0.5);
+          tl.set("#j" + j, { opacity: 0 }, 5.0 + (j + 1) * 0.5);
+        }
+        tl.set(".pl", { opacity: 0.2 }, 6.0);
+        tl.to("#fond1", { filter: "brightness(0.12)", duration: 0.45, ease: "power2.in" }, 8.55);
+
+        // ---------- PLAN 2 (9-17 s) : le choc
+        var iaG = "#ia-g";
+        tl.fromTo(iaG, { opacity: 0, scale: 3.2 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power4.out" }, 9.0);
+        tl.fromTo("#ia-r", { x: -90 }, { x: -9, duration: 0.5, ease: "expo.out" }, 9.0);
+        tl.fromTo("#ia-c", { x: 90 }, { x: 9, duration: 0.5, ease: "expo.out" }, 9.0);
+        [9.5, 10.5, 11.5, 12.5].forEach(function (th, i) {
+          var f = 1 + i * 0.05;
+          tl.fromTo(iaG, { scale: 1 }, { scale: 1.07 * f, duration: 0.08, ease: "power2.out", yoyo: true, repeat: 1 }, th);
+          tl.fromTo("#ia-r", { x: -9 }, { x: -34 - i * 8, duration: 0.07, yoyo: true, repeat: 1, ease: "power2.out" }, th);
+          tl.fromTo("#ia-c", { x: 9 }, { x: 34 + i * 8, duration: 0.07, yoyo: true, repeat: 1, ease: "power2.out" }, th);
+        });
+        tl.set("#vite", { opacity: 1, innerHTML: "Vite." }, 11.5);
+        tl.set("#vite", { innerHTML: "Très <em>vite.</em>", fontSize: 200 }, 12.5);
+        tl.set("#vite", { opacity: 0 }, 13.4);
+        tl.to(iaG, { scale: 0.1, opacity: 0, y: -120, duration: 0.3, ease: "power3.in" }, 13.1);
+        [["#qe3", 0.30, 1.16], ["#qe2", 0.45, 1.10], ["#qe1", 0.6, 1.05], ["#q", 1, 1]].forEach(function (d, i) {
+          tl.fromTo(d[0], { opacity: 0, scale: 0.86 }, { opacity: d[1], scale: d[2], duration: 0.5, ease: "expo.out" }, 14.0 + (3 - i) * 0.07);
+        });
+        tl.to("#q, #qe1, #qe2, #qe3", { scale: "+=0.1", duration: 2.0, ease: "power2.in" }, 14.5);
+
+        // ---------- La feuille se déchire (16,4 -> 17,8)
+        var zig = [[52, 0], [49, 8], [53.5, 17], [48.5, 27], [53, 37], [49, 47], [53.5, 57], [48.5, 67], [52.5, 77], [49, 87], [53, 100]];
+        var cg = "polygon(0 0," + zig.map(function (z) { return z[0] + "% " + z[1] + "%"; }).join(",") + ",0 100%)";
+        var cd = "polygon(" + zig.map(function (z) { return z[0] + "% " + z[1] + "%"; }).join(",") + ",100% 100%,100% 0)";
+        $("#fg").style.clipPath = cg; $("#fd").style.clipPath = cd;
+        tl.set("#fg, #fd", { opacity: 1 }, 16.4);
+        tl.fromTo("#tear", { scale: 1.07 }, { scale: 1, duration: 0.22, ease: "power4.out" }, 16.4);
+        tl.to("#fg", { x: -1250, rotation: -7, transformOrigin: "0% 100%", duration: 0.85, ease: "power3.in" }, 17.0);
+        tl.to("#fd", { x: 1250, rotation: 7, transformOrigin: "100% 100%", duration: 0.85, ease: "power3.in" }, 17.0);
+
+        // ---------- PLAN 3 (17-27 s) : le Cercle IA
+        tl.fromTo("#insigne", { opacity: 0, scale: 0.6, rotation: -7 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.6)" }, 17.7);
+        tl.fromTo("#surtitre", { opacity: 0, letterSpacing: "0.42em" }, { opacity: 1, letterSpacing: "0.12em", duration: 0.7, ease: "sine.out" }, 17.9);
+        tl.fromTo("#org", { yPercent: 132 }, { yPercent: 0, duration: 0.55, ease: "expo.out" }, 18.0);
+        [["#w1", 21.0], ["#w2", 22.5], ["#w3", 24.0]].forEach(function (w) {
+          tl.fromTo(w[0], { opacity: 0, x: 90 }, { opacity: 1, x: 0, duration: 0.5, ease: "power4.out" }, w[1] - 0.05);
+          tl.fromTo(w[0] + " i", { scale: 0 }, { scale: 1, duration: 0.4, ease: "back.out(2)" }, w[1]);
+        });
+        tl.to("#p3", { opacity: 0, duration: 0.5, ease: "power1.in" }, 26.5);
+
+        // ---------- PLAN 4 (27-33 s) : les cartes se remplissent toutes seules
+        var cartesCfg = [
+          { id: "#cc0", t: 27.9, depart: [-520, 180, -380], rot: [6, 22, -4], fin: [0, 0, 0] },
+          { id: "#cc1", t: 28.5, depart: [-520, 300, -380], rot: [-4, 20, 3], fin: [0, 0, 0] },
+          { id: "#cc2", t: 29.1, depart: [-420, 400, -380], rot: [-6, 24, 2], fin: [0, 0, 0] }
+        ];
+        cartesCfg.forEach(function (k, i) {
+          tl.fromTo(k.id, { opacity: 0, x: k.depart[0], y: k.depart[1], z: k.depart[2], rotationY: k.rot[1], rotationX: k.rot[0] },
+            { opacity: 1, x: 0, y: 0, z: 0, rotationY: 12 - i * 3, rotationX: 0, duration: 0.9, ease: "power4.out" }, k.t);
+          tl.to(k.id, { y: -10, duration: 2.2, ease: "sine.inOut", yoyo: true, repeat: 1 }, k.t + 0.9);
+          tl.fromTo(k.id + " .ok", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 32.2 + i * 0.15);
+        });
+        var LOS = ["var(--lo-1)", "var(--lo-2)", "var(--lo-3)", "var(--lo-4)", "var(--lo-5)", "var(--lo-1)"];
+        Array.prototype.forEach.call(document.querySelectorAll("#cc0 .mini i"), function (el, n) {
+          tl.to(el, { backgroundColor: LOS[(n % 6)], duration: 0.2, ease: "none" }, 29.2 + n * 0.1);
+        });
+        [1, 2].forEach(function (cid) {
+          Array.prototype.forEach.call(document.querySelectorAll("#cc" + cid + " .barres b u"), function (u, n) {
+            u.style.background = LOS[(n + cid) % 6];
+            var largeur = cid === 1 ? [1, 0.82, 0.94, 0.6, 0.76][n] : [0.45, 0.7, 0.95, 0.6, 0.85][n];
+            tl.fromTo(u, { scaleX: 0 }, { scaleX: largeur, duration: 0.6, ease: "power2.out" }, 30.2 + n * 0.45 + (cid - 1) * 0.2);
+          });
+        });
+        tl.set("#cartes", { opacity: 1 }, 27);
+        tl.to("#cartes", { opacity: 0, duration: 0.25 }, 32.75);
+
+        // ---------- PLAN 5 (37-45 s) : vaincre, puis la carte finale
+        tl.fromTo("#p5 .repere", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 37.4);
+        tl.fromTo("#p5 .mi", { opacity: 0, scale: 1.45, transformOrigin: "50% 60%" }, { opacity: 1, scale: 1, duration: 0.36, ease: "back.out(1.5)", stagger: 0.12 }, 37.5);
+        tl.to("#p5", { opacity: 0, duration: 0.2 }, 39.2);
+        tl.fromTo("#carte", { opacity: 0, x: 96 }, { opacity: 1, x: 0, duration: 0.85, ease: "power4.out" }, 39.3);
+        tl.fromTo("#insigne2", { opacity: 0, scale: 0.6, rotation: -7 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.6)" }, 39.5);
+        tl.fromTo("#surtitre2", { opacity: 0, letterSpacing: "0.42em" }, { opacity: 1, letterSpacing: "0.12em", duration: 0.7, ease: "sine.out" }, 39.6);
+        tl.fromTo("#org2", { yPercent: 132 }, { yPercent: 0, duration: 0.55, ease: "expo.out" }, 39.7);
+        tl.fromTo(".tricolore i", { scaleX: 0, transformOrigin: "0 50%" }, { scaleX: 1, duration: 0.34, ease: "power2.inOut", stagger: 0.13 }, 39.85);
+        tl.fromTo(".appel .mi", { yPercent: 136 }, { yPercent: 0, duration: 0.62, ease: "power4.out", stagger: 0.1 }, 40.0);
+        tl.fromTo("#rejoins", { opacity: 0, y: 30, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, 42.0);
+        tl.fromTo("#rejoins svg", { x: -14 }, { x: 10, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 3 }, 42.5);
+
+        window.addEventListener("hf-seek", function (ev) { rendre(ev.detail.time); });
+        window.__timelines = window.__timelines || {};
+        window.__timelines[ID] = tl;
+        tl.seek(0);
+        rendre(typeof window.__hfThreeTime === "number" ? window.__hfThreeTime : 0);
+      })();
+    </script>
+    <script src="apercu.js"></script>
+  </body>
+</html>

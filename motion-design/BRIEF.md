@@ -56,10 +56,10 @@ Aucun chiffre ni statistique inventé à l'écran (pas de «3 h → 3 min»).
 2. [x] Référence reçue et analysée
 3. [x] Storyboard validé (scènes, durées, textes)
 4. [x] Script de voix off validé (texte)
-5. [ ] Identité visuelle et assets réunis (insigne HD)
-6. [ ] Construction des scènes
-7. [ ] Voix off et musique
-8. [ ] Prévisualisation, retours scène par scène
+5. [x] Identité visuelle et assets réunis (insigne de la référence)
+6. [x] Construction des scènes
+7. [x] Voix off et musique (v1)
+8. [ ] Prévisualisation, retours scène par scène (en cours)
 9. [ ] Rendu final MP4 et test sur la télé
 
 ## Journal
@@ -69,3 +69,7 @@ Aucun chiffre ni statistique inventé à l'écran (pas de «3 h → 3 min»).
 - Voix Kokoro refusée. Voix de qualité: réseau d'environnement à ouvrir par l'utilisateur (option B). Constaté: api.openai.com et api.elevenlabs.io répondent, speech.platform.bing.com (edge-tts) bloqué. Il faut une clé API stockée dans l'environnement (jamais dans le chat) et la variable à lire doit être précisée.
 - Sound design v1 jugé pas assez percutant. v2 générée (taiko, kicks, claps, roulements, crashs inversés), script dans le scratchpad `son/son2.py`.
 - Insigne: utiliser celui de la référence.
+- Voix: Kokoro `ff_siwis` retenue par l'utilisateur (pas de clé API). Une phrase = un fichier, placés sur les temps forts.
+- Clip v3 construit (45 s, 1920×1080, 30 i/s) dans `motion-design/clip-cercle-ia-v3/`: plans 1-2 en 2D (HTML/GSAP), plans 3-5 en 3D (three.js, scène de la référence v2 étendue), feuille qui se déchire entre les deux. Rendu final par `outils/rendu.mjs` en 4 tronçons parallèles (3 s par image 3D en qualité finale), assemblés par ffmpeg avec la bande-son.
+- Non versionnés (`.gitignore`): `vendor/`, `assets/` (insigne, polices, modèles, bande-son), `renders/`. Ils restent dans le zip de la référence et dans la session.
+- À valider avec l'utilisateur: rythme, textes à l'écran, voix, mixage, sous-titres pour télé muette, `[fonction]` de validation retirée de la mention.
