@@ -46,16 +46,16 @@ Fichier de suivi: brief, checklist et journal. À relire au début de chaque ses
 Aucun chiffre ni statistique inventé à l'écran (pas de «3 h → 3 min»).
 
 ## Questions ouvertes
-- [ ] Storyboard v1 et voix off à valider
-- [ ] Voix off: quel outil est disponible ici pour une voix féminine française de qualité ? À vérifier
-- [ ] Musique épique: générée ou fournie ? À vérifier (outils et droits)
+- [x] Storyboard v1 et texte de voix off validés par l'utilisateur
+- [ ] Voix off v1 à écouter et valider: Kokoro, voix `ff_siwis` (locale, via `hyperframes tts`). Nécessite un venv Python avec `kokoro-onnx soundfile` (variable `HYPERFRAMES_PYTHON`).
+- [ ] Musique épique: pas de CLI heygen ici, donc génération par synthèse (comme la bande-son de la référence) ou fichier fourni par l'utilisateur
 - [ ] Insigne: tenter de trouver une version plus grande, sinon rester sur celui de la référence
 
 ## Checklist de production (à suivre dans l'ordre)
 1. [x] Brief de base
 2. [x] Référence reçue et analysée
-3. [ ] Storyboard validé (scènes, durées, textes)
-4. [ ] Script de voix off validé
+3. [x] Storyboard validé (scènes, durées, textes)
+4. [x] Script de voix off validé (texte)
 5. [ ] Identité visuelle et assets réunis (insigne HD)
 6. [ ] Construction des scènes
 7. [ ] Voix off et musique
@@ -65,3 +65,4 @@ Aucun chiffre ni statistique inventé à l'écran (pas de «3 h → 3 min»).
 ## Journal
 - Brief initial enregistré.
 - Réponses reçues (format 16:9, voix féminine, musique épique premium, pas de contrainte) et référence « Clip Cercle IA v2 » analysée. Storyboard et voix off proposés.
+- Storyboard v1 et texte validés. Voix off v1 générée (Kokoro ff_siwis), en attente d'écoute. Route HyperFrames: /general-video.
