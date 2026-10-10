@@ -5,37 +5,63 @@ Fichier de suivi: brief, checklist et journal. À relire au début de chaque ses
 ## Brief (validé par l'utilisateur)
 - **Produit**: le Cercle IA de l'EDG-T (École de Guerre-Terre)
 - **Type**: vidéo promo, filière HyperFrames
-- **Diffusion**: affichage sur télévision, donc 16:9 (à confirmer)
+- **Diffusion**: télévision, 16:9, 1920×1080 (confirmé)
 - **Durée**: 30 à 45 s
-- **Voix off**: oui, en français
+- **Voix off**: oui, français, voix féminine, texte proposé par Claude
+- **Musique**: épique, rendu qualitatif premium
+- **Appel à l'action**: «Ne loupe pas encore le train» (interprétation à confirmer: on ne rate pas le train de l'IA)
+- **Contraintes**: aucune
 - **Lien avec le dépôt quartier-ia**: aucun (le dépôt sert d'espace de travail)
-- **Référence**: une première vidéo sera fournie par l'utilisateur
 
-## Storyboard initial (à affiner)
-1. **Le quotidien**: tâches très répétitives, moyens archaïques (papier, copier-coller, tableaux à la main).
-2. **Le choc**: l'IA arrive. Question: «mais comment l'utiliser ?».
-3. **Le déclic**: le Cercle IA EDG-T apparaît. Il aide, accompagne, transforme.
-4. **L'adaptation**: après le premier choc, on s'adapte, on construit.
-5. **La victoire**: «on va vaincre». Logo et appel à l'action.
+## Référence fournie: « Clip Cercle IA v2 »
+- Source: `clip-cercle-ia-v2-projet.zip` (dossier uploadé en session, non versionné ici).
+- Clip de 15 s, 1920×1080, 30 i/s, projet HyperFrames autonome: scène 3D low-poly de nuit (modèles KayKit CC0), GSAP + three.js r128, bande-son synthétique.
+- Découpage: grue/chantier (0-3 s) → six lignes d'opération qui s'allument (3-6 s) → le train arrive et repart (6-10 s) → recul sur le bâtiment illuminé et carte finale (10-15 s).
+- Voix du clip: «Vous avez des idées ? / L'envie de transformer, de prendre votre destin en main ? / Ne laissez pas partir le train… / Investissez-vous avec nous.»
+- Reste à compléter dans la référence: QR code, mention de validation `[fonction]`.
+- Mention portée par le clip: «NON PROTÉGÉ. Réalisé avec assistance IA.»
 
-## Infos encore manquantes
-- [ ] Vidéo de référence (fichier ou lien)
-- [ ] Format confirmé (16:9, résolution de la télé ?)
-- [ ] Logo et charte (couleurs, polices) du Cercle IA / EDG-T
-- [ ] Texte exact de la voix off (ou je le propose) et voix souhaitée (homme/femme, ton)
-- [ ] Musique: oui/non, style
-- [ ] Appel à l'action final (contact, lieu, devise ?)
-- [ ] Éléments sensibles à éviter (images, mentions, confidentialité militaire)
+## Identité visuelle (relevée dans la référence)
+- Fond nuit `#0b1222`, fond `#0f1522`, surface `#161e2e`, texte `#e6ebf4`, atténué `#9aa6bd`, trait `#2a3550`
+- Bleu clair `#9db8ec`, bleu fort `#1d3f8f`, rouge `#ff6b5e`, rouge fort `#c1272d`, blanc `#f4f6fa` (tricolore bleu/blanc/rouge)
+- Six lignes d'opération: `#a3acba`, `#5b9bff`, `#3cc2ad`, `#f0a838`, `#ef6f92`, `#a98cf0`
+- Polices: IBM Plex Sans Condensed (titres), IBM Plex Mono (légendes)
+- Insigne EdG-T: `assets/insigne-edgt.png` dans la référence, 156×188 px (trop petit pour une télé, demander une version plus grande ou vectorielle). À ne pas déposer dans un dépôt public sans accord.
+
+## Storyboard proposé (45 s, à valider)
+1. **0-9 s, le quotidien archaïque**: tableaux recopiés à la main, papiers, comptes rendus refaits, gestes répétitifs. Palette terne.
+2. **9-17 s, le choc**: l'IA arrive, rupture de rythme. Question à l'écran: «Mais comment s'en servir ?»
+3. **17-27 s, la révélation**: le Cercle IA EDG-T apparaît (insigne, lignes d'opération qui s'allument). Il aide, accompagne, transforme.
+4. **27-37 s, l'adaptation**: passé le choc, on s'adapte, on construit (le bâtiment se monte, les équipes avancent).
+5. **37-45 s, la victoire**: «Nous allons vaincre», le train de l'IA, carte finale: «Ne loupe pas encore le train» + QR code.
+
+## Voix off proposée (≈100 mots, voix féminine, à valider)
+1. «Des tableaux recopiés à la main. Des comptes rendus refaits dix fois. Des heures perdues sur des tâches qui se répètent, encore et encore.»
+2. «Et puis l'IA arrive. Vite. Très vite. Mais comment s'en servir ?»
+3. «Le Cercle IA de l'École de Guerre-Terre est là. Il aide. Il accompagne. Il transforme.»
+4. «Passé le premier choc, on s'adapte. On apprend. On construit. Ensemble.»
+5. «Nous allons vaincre. Ne loupe pas encore le train. Rejoins le Cercle IA.»
+
+## Questions ouvertes
+- [ ] Style visuel: prolonger la référence (3D low-poly de nuit) ou autre direction (2D motion typographique) ?
+- [ ] Appel à l'action: «Ne loupe pas encore le train» tel quel, tutoiement ou vouvoiement ?
+- [ ] Version plus grande ou vectorielle de l'insigne
+- [ ] QR code / lien d'inscription, mention de validation `[fonction]`
+- [ ] Voix off: synthèse vocale (quel outil ?) ou enregistrement. À vérifier ce qui est disponible ici.
+- [ ] Musique: générée ou fournie ? Vérifier les outils disponibles et les droits.
+- [ ] Durée finale: 30, 40 ou 45 s
 
 ## Checklist de production (à suivre dans l'ordre)
-1. [ ] Brief complet
-2. [ ] Storyboard validé (scènes, durées, textes)
-3. [ ] Script de voix off validé
-4. [ ] Identité visuelle et assets réunis
-5. [ ] Construction des scènes
-6. [ ] Voix off et musique
-7. [ ] Prévisualisation, retours scène par scène
-8. [ ] Rendu final MP4 et test sur la télé
+1. [x] Brief de base
+2. [x] Référence reçue et analysée
+3. [ ] Storyboard validé (scènes, durées, textes)
+4. [ ] Script de voix off validé
+5. [ ] Identité visuelle et assets réunis (insigne HD)
+6. [ ] Construction des scènes
+7. [ ] Voix off et musique
+8. [ ] Prévisualisation, retours scène par scène
+9. [ ] Rendu final MP4 et test sur la télé
 
 ## Journal
 - Brief initial enregistré.
+- Réponses reçues (format 16:9, voix féminine, musique épique premium, pas de contrainte) et référence « Clip Cercle IA v2 » analysée. Storyboard et voix off proposés.
