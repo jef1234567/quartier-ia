@@ -28,28 +28,28 @@ Fichier de suivi: brief, checklist et journal. À relire au début de chaque ses
 - Polices: IBM Plex Sans Condensed (titres), IBM Plex Mono (légendes)
 - Insigne EdG-T: `assets/insigne-edgt.png` dans la référence, 156×188 px (trop petit pour une télé, demander une version plus grande ou vectorielle). À ne pas déposer dans un dépôt public sans accord.
 
-## Storyboard proposé (45 s, à valider)
-1. **0-9 s, le quotidien archaïque**: tableaux recopiés à la main, papiers, comptes rendus refaits, gestes répétitifs. Palette terne.
-2. **9-17 s, le choc**: l'IA arrive, rupture de rythme. Question à l'écran: «Mais comment s'en servir ?»
-3. **17-27 s, la révélation**: le Cercle IA EDG-T apparaît (insigne, lignes d'opération qui s'allument). Il aide, accompagne, transforme.
-4. **27-37 s, l'adaptation**: passé le choc, on s'adapte, on construit (le bâtiment se monte, les équipes avancent).
-5. **37-45 s, la victoire**: «Nous allons vaincre», le train de l'IA, carte finale: «Ne loupe pas encore le train» + QR code.
+## Décisions (utilisateur)
+- Style: mixer 2D typographique/papier (quotidien) et 3D low-poly de nuit (Cercle IA), comme la référence
+- Tutoiement. Appel à l'action: «Ne loupe pas encore le train» puis «Rejoins-nous» (pas de QR code)
+- Insigne: utiliser celui de la référence (156×188 px) ou en trouver une version plus grande sur internet
+- Durée: 45 s, cadence 120 bpm, coupes sur les temps forts
 
-## Voix off proposée (≈100 mots, voix féminine, à valider)
-1. «Des tableaux recopiés à la main. Des comptes rendus refaits dix fois. Des heures perdues sur des tâches qui se répètent, encore et encore.»
-2. «Et puis l'IA arrive. Vite. Très vite. Mais comment s'en servir ?»
-3. «Le Cercle IA de l'École de Guerre-Terre est là. Il aide. Il accompagne. Il transforme.»
-4. «Passé le premier choc, on s'adapte. On apprend. On construit. Ensemble.»
-5. «Nous allons vaincre. Ne loupe pas encore le train. Rejoins le Cercle IA.»
+## Storyboard v1 (45 s, à valider)
+| Plan | Temps | Image | Voix off | Son |
+| --- | --- | --- | --- | --- |
+| 1. Le quotidien | 0-9 s | 2D, palette grise et terne: tableau qui se remplit case par case, lignes «Copier. Coller. Recopier. Ressaisir.» qui s'empilent, pages de calendrier qui défilent, tampon répété | «Des tableaux recopiés à la main. Des comptes rendus refaits dix fois. Des heures perdues, encore et encore.» | tic-tac, stylo, machine à écrire, rythme monotone |
+| 2. Le choc | 9-17 s | Coupe sèche. Écran noir, glitch, «IA» géant en typo cinétique, puis question qui se répète en écho: «Mais comment s'en servir ?» | «Et puis l'IA arrive. Vite. Très vite. Mais comment s'en servir ?» | silence, impact, montée de tension |
+| 3. Le Cercle IA | 17-27 s | La feuille se déchire: le papier devient le sol 3D. Le bâtiment se construit, les six lignes d'opération s'allument. L'insigne apparaît. Trois mots, un par temps fort: AIDER, ACCOMPAGNER, TRANSFORMER | «Le Cercle IA de l'École de Guerre-Terre est là. Il aide. Il accompagne. Il transforme.» | entrée de la musique épique (ré mineur vers ré majeur) |
+| 4. On s'adapte, on construit | 27-37 s | Caméra à hauteur d'homme. Les cartes 2D du plan 1 glissent dans la ville 3D et se remplissent toutes seules. Silhouettes low-poly qui s'organisent. Le train arrive au loin | «Passé le premier choc, on s'adapte. On apprend. On construit. Ensemble.» | montée progressive, percussions |
+| 5. Vaincre | 37-45 s | Le train frôle la caméra, recul sur le bâtiment illuminé, drapeau tricolore. «NOUS ALLONS VAINCRE.» puis carte finale: insigne, «Cercle IA EdG-T», «Rejoins-nous». Bas d'écran: NON PROTÉGÉ, réalisé avec assistance IA | «Nous allons vaincre. Ne loupe pas encore le train. Rejoins-nous.» | apogée, coup final, résolution en ré majeur |
+
+Aucun chiffre ni statistique inventé à l'écran (pas de «3 h → 3 min»).
 
 ## Questions ouvertes
-- [ ] Style visuel: prolonger la référence (3D low-poly de nuit) ou autre direction (2D motion typographique) ?
-- [ ] Appel à l'action: «Ne loupe pas encore le train» tel quel, tutoiement ou vouvoiement ?
-- [ ] Version plus grande ou vectorielle de l'insigne
-- [ ] QR code / lien d'inscription, mention de validation `[fonction]`
-- [ ] Voix off: synthèse vocale (quel outil ?) ou enregistrement. À vérifier ce qui est disponible ici.
-- [ ] Musique: générée ou fournie ? Vérifier les outils disponibles et les droits.
-- [ ] Durée finale: 30, 40 ou 45 s
+- [ ] Storyboard v1 et voix off à valider
+- [ ] Voix off: quel outil est disponible ici pour une voix féminine française de qualité ? À vérifier
+- [ ] Musique épique: générée ou fournie ? À vérifier (outils et droits)
+- [ ] Insigne: tenter de trouver une version plus grande, sinon rester sur celui de la référence
 
 ## Checklist de production (à suivre dans l'ordre)
 1. [x] Brief de base
