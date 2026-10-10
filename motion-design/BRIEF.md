@@ -66,3 +66,6 @@ Aucun chiffre ni statistique inventé à l'écran (pas de «3 h → 3 min»).
 - Brief initial enregistré.
 - Réponses reçues (format 16:9, voix féminine, musique épique premium, pas de contrainte) et référence « Clip Cercle IA v2 » analysée. Storyboard et voix off proposés.
 - Storyboard v1 et texte validés. Voix off v1 générée (Kokoro ff_siwis), en attente d'écoute. Route HyperFrames: /general-video.
+- Voix Kokoro refusée. Voix de qualité: réseau d'environnement à ouvrir par l'utilisateur (option B). Constaté: api.openai.com et api.elevenlabs.io répondent, speech.platform.bing.com (edge-tts) bloqué. Il faut une clé API stockée dans l'environnement (jamais dans le chat) et la variable à lire doit être précisée.
+- Sound design v1 jugé pas assez percutant. v2 générée (taiko, kicks, claps, roulements, crashs inversés), script dans le scratchpad `son/son2.py`.
+- Insigne: utiliser celui de la référence.
