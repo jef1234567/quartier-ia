@@ -15,7 +15,7 @@ mode: collaborative
 - scene: Une page A4 paysage se noircit de gribouillis pendant qu'un chrono s'affole 
 - duration: 3.3s
 - transition_in: cut
-- status: outline
+- status: built
 - voiceover: "Une fichette, ça te prend deux heures ?"
 
 narrativeRole: Nommer la corvée que tout le monde connaît. keyMessage: la fichette est un travail long et répétitif.
@@ -28,7 +28,7 @@ narrativeRole: Nommer la corvée que tout le monde connaît. keyMessage: la fich
 - scene: Des notes télégraphiques (flèches, abréviations) glissent dans un volet ; le mot « fichette » se tape ; une pastille « Entrée » clignote
 - duration: 2.3s
 - transition_in: crossfade
-- status: outline
+- status: built
 - voiceover: "Colle tes notes brutes, tape « fichette »."
 
 narrativeRole: Montrer l'entrée minimale. keyMessage: on part de ses notes, telles quelles.
@@ -41,7 +41,7 @@ narrativeRole: Montrer l'entrée minimale. keyMessage: on part de ses notes, tel
 - scene: Trois pastilles qui s'allument tour à tour : « = → ↑ » décodés en phrases ; « à vérifier » posé sur un trou ; lien de source qui se déploie
 - duration: 4.2s
 - transition_in: crossfade
-- status: outline
+- status: built
 - voiceover: "Il décode tes abréviations, signale ce qui manque, et cherche les sources ouvertes."
 
 narrativeRole: Expliquer le travail invisible du skill. keyMessage: décodage, signalement des manques, enrichissement en sources ouvertes.
@@ -54,7 +54,7 @@ narrativeRole: Expliquer le travail invisible du skill. keyMessage: décodage, s
 - scene: Une page A4 paysage en deux colonnes se remplit bloc par bloc (en-tête, parties, encadrés « À retenir ») ; trois pastilles Conférence / Visite / Sujet orbitent autour
 - duration: 6.3s
 - transition_in: wipe
-- status: outline
+- status: built
 - voiceover: "Il remplit ton modèle Word : une page A4 paysage, deux colonnes, conférence, visite ou sujet."
 
 narrativeRole: Montrer le résultat attendu et les trois types de fiche. keyMessage: le modèle est rempli, la mise en page n'est pas touchée.
@@ -67,7 +67,7 @@ narrativeRole: Montrer le résultat attendu et les trois types de fiche. keyMess
 - scene: Un bouton « Enregistrer la fichette » est cliqué ; un nom de fichier normé s'écrit et une icône PDF tombe à côté
 - duration: 4.1s
 - transition_in: crossfade
-- status: outline
+- status: built
 - voiceover: "Un clic sur « Enregistrer la fichette » : nom normé et PDF."
 
 narrativeRole: Conclure le flux de travail. keyMessage: enregistrement normé et PDF automatiques.
@@ -80,7 +80,7 @@ narrativeRole: Conclure le flux de travail. keyMessage: enregistrement normé et
 - scene: Checklist « 5 min · une seule fois » qui se coche ; un tampon « relu et validé » s'abat sur la fiche
 - duration: 4.6s
 - transition_in: crossfade
-- status: outline
+- status: built
 - voiceover: "Installation en cinq minutes, une seule fois. Toi, tu relis et tu valides."
 
 narrativeRole: Lever les freins (installation, contrôle). keyMessage: installation unique de 5 min, le rédacteur garde la main.
@@ -93,7 +93,7 @@ narrativeRole: Lever les freins (installation, contrôle). keyMessage: installat
 - scene: L'insigne de l'École de guerre (public/logo-edg.png, taille modeste) apparaît au centre d'un grand titre « Cercle IA EdG-T » ; le Quartier IA en fond, pastille « Rejoins le quartier »
 - duration: 3.1s
 - transition_in: crossfade
-- status: outline
+- status: built
 - voiceover: "Cercle IA EdG-T. Rejoins le quartier."
 
 narrativeRole: Signer et inviter. keyMessage: le cercle IA EdG-T, et le Quartier IA pour le rejoindre.
