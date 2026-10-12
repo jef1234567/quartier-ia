@@ -1,6 +1,6 @@
 ---
 format: 1080x1920
-duration: 30s
+duration: 28s
 message: "Le skill Fichette transforme tes notes brutes en fiche EdG-T d'une page ; tu relis et tu valides"
 arc: Hook → Geste → Mécanisme → Résultat → Bouton → Lever la crainte → Signature
 audience: "tous les officiers de l'EdG-T"
@@ -13,7 +13,7 @@ mode: collaborative
 - persuasion: question qui pique (le coût de temps)
 - beat: complicité
 - scene: Une page A4 paysage se noircit de gribouillis pendant qu'un chrono s'affole 
-- duration: 4s
+- duration: 3.3s
 - transition_in: cut
 - status: outline
 - voiceover: "Une fichette, ça te prend deux heures ?"
@@ -26,7 +26,7 @@ narrativeRole: Nommer la corvée que tout le monde connaît. keyMessage: la fich
 - persuasion: promesse simple en une action
 - beat: soulagement
 - scene: Des notes télégraphiques (flèches, abréviations) glissent dans un volet ; le mot « fichette » se tape ; une pastille « Entrée » clignote
-- duration: 4s
+- duration: 2.3s
 - transition_in: crossfade
 - status: outline
 - voiceover: "Colle tes notes brutes, tape « fichette »."
@@ -39,7 +39,7 @@ narrativeRole: Montrer l'entrée minimale. keyMessage: on part de ses notes, tel
 - persuasion: trois verbes, trois preuves
 - beat: surprise
 - scene: Trois pastilles qui s'allument tour à tour : « = → ↑ » décodés en phrases ; « à vérifier » posé sur un trou ; lien de source qui se déploie
-- duration: 6s
+- duration: 4.2s
 - transition_in: crossfade
 - status: outline
 - voiceover: "Il décode tes abréviations, signale ce qui manque, et cherche les sources ouvertes."
@@ -52,7 +52,7 @@ narrativeRole: Expliquer le travail invisible du skill. keyMessage: décodage, s
 - persuasion: image concrète
 - beat: clarté
 - scene: Une page A4 paysage en deux colonnes se remplit bloc par bloc (en-tête, parties, encadrés « À retenir ») ; trois pastilles Conférence / Visite / Sujet orbitent autour
-- duration: 6s
+- duration: 6.3s
 - transition_in: wipe
 - status: outline
 - voiceover: "Il remplit ton modèle Word : une page A4 paysage, deux colonnes, conférence, visite ou sujet."
@@ -65,7 +65,7 @@ narrativeRole: Montrer le résultat attendu et les trois types de fiche. keyMess
 - persuasion: avant / après en un geste
 - beat: satisfaction
 - scene: Un bouton « Enregistrer la fichette » est cliqué ; un nom de fichier normé s'écrit et une icône PDF tombe à côté
-- duration: 4s
+- duration: 4.1s
 - transition_in: crossfade
 - status: outline
 - voiceover: "Un clic sur « Enregistrer la fichette » : nom normé et PDF."
@@ -78,7 +78,7 @@ narrativeRole: Conclure le flux de travail. keyMessage: enregistrement normé et
 - persuasion: lever la crainte (c'est toi le rédacteur)
 - beat: confiance
 - scene: Checklist « 5 min · une seule fois » qui se coche ; un tampon « relu et validé » s'abat sur la fiche
-- duration: 4s
+- duration: 4.6s
 - transition_in: crossfade
 - status: outline
 - voiceover: "Installation en cinq minutes, une seule fois. Toi, tu relis et tu valides."
@@ -91,7 +91,7 @@ narrativeRole: Lever les freins (installation, contrôle). keyMessage: installat
 - persuasion: invitation
 - beat: appartenance
 - scene: L'insigne de l'École de guerre (public/logo-edg.png, taille modeste) apparaît au centre d'un grand titre « Cercle IA EdG-T » ; le Quartier IA en fond, pastille « Rejoins le quartier »
-- duration: 4s
+- duration: 3.1s
 - transition_in: crossfade
 - status: outline
 - voiceover: "Cercle IA EdG-T. Rejoins le quartier."

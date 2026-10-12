@@ -30,3 +30,5 @@ Short vertical (smartphone) de démonstration du skill « Fichette » pour le Ce
 - « Installation en cinq minutes » confirmé par l'utilisateur.
 - Contenu du skill à respecter : page A4 paysage, deux colonnes, conférence / visite / sujet, décodage des notes, sources ouvertes, remplissage du modèle Word, bouton « Enregistrer la fichette » (nom normé + PDF), le rédacteur relit et valide.
 - Pas de mascotte (décision utilisateur).
+- Audio fourni : public/musique.m4a (musique, 2 min 41 : en garder ~28 s + fondu) et public/voix-elevenlabs/voix-complete.mp3 (voix ElevenLabs, 27,95 s, une seule piste). Débuts de lignes mesurés (transcription locale) : L1 0,1 s · L2 3,4 · L3 5,7 · L4 9,9 · L5 16,2 · L6 20,3 · L7 24,9 · fin 27,95.
+- Transcription locale imparfaite (« à quatre paysages », « non-normer ») : probablement des erreurs de transcription, à confirmer à l'écoute ; les sous-titres reprennent le texte de SCRIPT.md, pas la transcription.
