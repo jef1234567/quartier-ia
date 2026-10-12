@@ -1,0 +1,31 @@
+---
+workflow: faceless-explainer
+flow: automation
+storyboard: yes
+message: "Le skill Fichette transforme tes notes brutes en fiche EdG-T d'une page, tu relis et tu valides"
+destination: shorts
+aspect: 1080x1920
+language: fr
+audience: "tous les officiers de l'EdG-T"
+length: 30s
+angle: how-to
+---
+
+## Intent
+
+Short vertical (smartphone) de démonstration du skill « Fichette » pour le Cercle IA EdG-T, sur le thème du Quartier IA. Ton décontracté, style animé (texte cinétique + mascotte animée, pas de visage). Voix off française générée par l'utilisateur dans Google Flow : on prépare le texte, l'utilisateur fournit l'audio. Musique légère. Signature finale : logo + « Cercle IA EdG-T ».
+
+## Assets
+
+- public/logo-edg.png — insigne École de guerre fourni par l'utilisateur (250×329 px, fond transparent) ; scène finale. Petit : l'afficher à taille modeste.
+- SCRIPT-v0.md — version 48 s du script, à condenser à 30 s.
+
+## Customizations
+
+- Charte graphique du Quartier IA (source/src/page.html) : fond #E8E5DF, surface #FFFFFF, texte #1B1F2A, gris #666B78, trait #D6D2CA, rouge #D3262E, laiton #8F7228 ; titres Marcellus, texte IBM Plex Sans, mono IBM Plex Mono.
+
+## Notes
+
+- Dépôt public : aucun contenu sensible ou à diffusion restreinte.
+- « Installation en cinq minutes » confirmé par l'utilisateur.
+- Contenu du skill à respecter : page A4 paysage, deux colonnes, conférence / visite / sujet, décodage des notes, sources ouvertes, remplissage du modèle Word, bouton « Enregistrer la fichette » (nom normé + PDF), le rédacteur relit et valide.

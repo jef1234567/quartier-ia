@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "preferences": {
+    "style_preset.faceless-explainer": {
+      "value": "capsule",
+      "confirmed_in": [
+        "fichette-short"
+      ],
+      "updated_at": "2026-10-12T07:33:15.585Z"
+    }
+  },
+  "sightings": {}
+}
