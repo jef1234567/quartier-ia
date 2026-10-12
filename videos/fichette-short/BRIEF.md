@@ -13,7 +13,7 @@ angle: how-to
 
 ## Intent
 
-Short vertical (smartphone) de démonstration du skill « Fichette » pour le Cercle IA EdG-T, sur le thème du Quartier IA. Ton décontracté, style animé (texte cinétique + mascotte animée, pas de visage). Voix off française générée par l'utilisateur dans Google Flow : on prépare le texte, l'utilisateur fournit l'audio. Musique légère. Signature finale : logo + « Cercle IA EdG-T ».
+Short vertical (smartphone) de démonstration du skill « Fichette » pour le Cercle IA EdG-T, sur le thème du Quartier IA. Ton décontracté, style animé (texte cinétique et pastilles animées, aucune mascotte, pas de visage). Voix off française générée par l'utilisateur dans Google Flow : on prépare le texte, l'utilisateur fournit l'audio. Musique légère. Signature finale : logo + « Cercle IA EdG-T ».
 
 ## Assets
 
@@ -29,3 +29,4 @@ Short vertical (smartphone) de démonstration du skill « Fichette » pour le Ce
 - Dépôt public : aucun contenu sensible ou à diffusion restreinte.
 - « Installation en cinq minutes » confirmé par l'utilisateur.
 - Contenu du skill à respecter : page A4 paysage, deux colonnes, conférence / visite / sujet, décodage des notes, sources ouvertes, remplissage du modèle Word, bouton « Enregistrer la fichette » (nom normé + PDF), le rédacteur relit et valide.
+- Pas de mascotte (décision utilisateur).

@@ -12,7 +12,7 @@ mode: collaborative
 - type: hook
 - persuasion: question qui pique (le coût de temps)
 - beat: complicité
-- scene: Une page A4 paysage se noircit de gribouillis pendant qu'un chrono s'affole ; la mascotte (pastille rouge à deux yeux) soupire
+- scene: Une page A4 paysage se noircit de gribouillis pendant qu'un chrono s'affole 
 - duration: 4s
 - transition_in: cut
 - status: outline
@@ -77,7 +77,7 @@ narrativeRole: Conclure le flux de travail. keyMessage: enregistrement normé et
 - type: social_proof
 - persuasion: lever la crainte (c'est toi le rédacteur)
 - beat: confiance
-- scene: Checklist « 5 min · une seule fois » qui se coche ; un tampon « relu et validé » s'abat sur la fiche, la mascotte lève le pouce
+- scene: Checklist « 5 min · une seule fois » qui se coche ; un tampon « relu et validé » s'abat sur la fiche
 - duration: 4s
 - transition_in: crossfade
 - status: outline
@@ -101,6 +101,5 @@ narrativeRole: Signer et inviter. keyMessage: le cercle IA EdG-T, et le Quartier
 ## Video direction (brouillon)
 
 - Charte du Quartier IA, preset capsule : fond crème #E8E5DF, pastilles à contour 2 px, rouge #D3262E, laiton #8F7228, Marcellus + IBM Plex Sans.
-- Mascotte : pastille rouge à deux yeux, seul « personnage », jamais de visage réaliste.
 - Musique légère en fond (voir note), voix off fournie par l'utilisateur (Google Flow).
 - Safe zone smartphone : texte à l'écart des 250 px du haut et des 350 px du bas.
