@@ -25,7 +25,7 @@ narrativeRole: Nommer la corvée que tout le monde connaît. keyMessage: la fich
 - type: pain_point
 - persuasion: promesse simple en une action
 - beat: soulagement
-- scene: Des notes télégraphiques (flèches, abréviations) glissent dans un volet ; le mot « fichette » se tape ; une pastille « Entrée » clignote
+- scene: Des notes télégraphiques sur un projet d'espaces verts (flèches, abréviations) tombent dans un volet ; le mot « fichette » se tape ; une pastille « Entrée » clignote
 - duration: 2.3s
 - transition_in: crossfade
 - status: built
@@ -99,6 +99,8 @@ narrativeRole: Lever les freins (installation, contrôle). keyMessage: installat
 narrativeRole: Signer et inviter. keyMessage: le cercle IA EdG-T, et le Quartier IA pour le rejoindre.
 
 ## Video direction (brouillon)
+
+- Énergie : fonds de couleur pleins alternés (encre, crème, rouge, laiton), titres géants, coupes sèches et wipes, pastilles qui rebondissent, flash et tremblement sur les temps forts. Caler les temps forts sur les temps de la musique (détection des beats à faire au build).
 
 - Charte du Quartier IA, preset capsule : fond crème #E8E5DF, pastilles à contour 2 px, rouge #D3262E, laiton #8F7228, Marcellus + IBM Plex Sans.
 - Musique légère en fond (voir note), voix off fournie par l'utilisateur (Google Flow).
